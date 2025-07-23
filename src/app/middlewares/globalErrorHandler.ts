@@ -10,9 +10,10 @@ import { handlerValidationError } from "../errorHelpers/handleValidationError"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    if (envVars.NODE_ENV == "Development") {
+    if (envVars.NODE_ENV == "development") {
         console.log(err)
     }
+    console.log(err)
     let statusCode = 500
     let message = "something went wrong"
     let errorSources: TErrorSources[] = []
@@ -50,6 +51,6 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
         message,
         errorSources,
         err,
-        stack: envVars.NODE_ENV == "Development" ? err.stack : null
+        stack: envVars.NODE_ENV == "development" ? err.stack : null
     })
 }
