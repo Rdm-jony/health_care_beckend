@@ -8,10 +8,16 @@ import passport from "passport";
 import { envVars } from "./app/config/env";
 import './app/config/passport';
 import cookieParser from "cookie-parser";
+import cors from "cors"
 const app = express()
 
 app.use(express.json())
 app.use(cookieParser())
+app.set("trust proxy",1)
+app.use(cors({
+    origin: envVars.FRONT_END_URL,
+    credentials: true
+}))
 app.use(
     session({
         secret: envVars.EXPRESS_SESSION_SECRET,

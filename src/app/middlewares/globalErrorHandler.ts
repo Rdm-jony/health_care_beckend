@@ -7,13 +7,16 @@ import { TErrorSources } from "../interfaces/error.types"
 import { hendleCastError } from "../errorHelpers/handleCastError"
 import { handleDuplicateError } from "../errorHelpers/handleDuplicateError"
 import { handlerValidationError } from "../errorHelpers/handleValidationError"
+import { deleteImageFromCloudinary } from "../config/cloudinary.config"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const globalErrorHandler =async (err: any, req: Request, res: Response, next: NextFunction) => {
     if (envVars.NODE_ENV == "development") {
         console.log(err)
     }
-    console.log(err)
+    if(req.file?.path){
+        await deleteImageFromCloudinary(req.file?.path)
+    }
     let statusCode = 500
     let message = "something went wrong"
     let errorSources: TErrorSources[] = []
