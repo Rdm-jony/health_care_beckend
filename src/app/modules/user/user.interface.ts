@@ -1,20 +1,22 @@
 import { Types } from "mongoose";
 
-export enum IsActive {
-    ACTIVE = "ACTIVE",
-    INACTIVE = "INACTIVE",
-    BLOCKED = "BLOCKED"
-}
 
 export enum Role {
     SUPER_ADMIN = "SUPER_ADMIN",
     ADMIN = "ADMIN",
     USER = "USER",
+    DOCTOR = "DOCTOR",
 }
 
-export interface IAuthProvider{
-    provider:"google" | "credentials",
-    providerId:string
+export enum Gender {
+    MALE = "MALE",
+    FEMALE = "FEMALE",
+    OTHER = "OTHER"
+}
+
+export interface IAuthProvider {
+    provider: "google" | "credentials",
+    providerId: string
 }
 
 export interface IUser {
@@ -22,13 +24,13 @@ export interface IUser {
     name: string,
     email: string,
     password?: string,
-    phone?: string,
-    address?: string,
+    phone: string,
+    gender:Gender,
+    address: string,
     picture?: string,
     isDeleted?: boolean,
     isVerified?: boolean,
-    isActive?: IsActive,
-    role:Role,
-    auth:IAuthProvider[]
+    role: Role,
+    auth: IAuthProvider[]
 
 }
