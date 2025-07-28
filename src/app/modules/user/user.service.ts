@@ -21,7 +21,7 @@ const createUser = async (payload: Partial<IUser>) => {
     const user = await User.create({ ...payload, auth: [authProvider], password: hashPassword })
     const userObj = user.toObject();
     delete userObj.password;
-     return userObj
+    return userObj
 }
 
 const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken: JwtPayload) => {
@@ -32,10 +32,15 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 
     }
 
+    if (isUserExists.role == Role.DOCTOR) {
+        throw new AppError(httpStatusCode.FORBIDDEN, "doctor profile is not update in this route")
+    }
+
     if (decodedToken.role === Role.USER) {
         if (decodedToken.userId !== userId) {
             throw new AppError(httpStatusCode.FORBIDDEN, "You are unauthorized to update another users profile")
         }
+
     }
     if (decodedToken.role === Role.ADMIN && isUserExists.role == Role.SUPER_ADMIN) {
         if (decodedToken.userId !== userId) {
@@ -55,11 +60,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 
     }
 
-    if (payload.isActive || payload.isDeleted || payload.isVerified) {
-        if (decodedToken.role === Role.USER) {
-            throw new AppError(httpStatusCode.FORBIDDEN, "You are not authorized");
-        }
-    }
+
 
     const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, { new: true, runValidators: true }).select("-password")
     if (isUserExists.picture) {

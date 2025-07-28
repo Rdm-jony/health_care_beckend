@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { doctorServices } from "./doctor.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatusCode from "http-status-codes"
+import { JwtPayload } from "jsonwebtoken";
 
 
 const addSpecialize = catchAsync(async (req: Request, res: Response) => {
@@ -48,10 +49,24 @@ const addDoctor = catchAsync(async (req: Request, res: Response) => {
         success: true
     })
 })
+const updateDoctor = catchAsync(async (req: Request, res: Response) => {
+    const doctorId = req.params.id
+    const decodedToken = req.user as JwtPayload
+    const updatedDoctor = await doctorServices.updateDoctor(doctorId, decodedToken, req.body)
+
+    sendResponse(res, {
+        data: updatedDoctor,
+        message: "doctor update succesfully!",
+        statusCode: httpStatusCode.OK,
+        success: true
+    })
+})
+
 
 export const doctorControllers = {
     addDoctor,
     addSpecialize,
     updateSpecialize,
-    getAllSpecialize
+    getAllSpecialize,
+    updateDoctor
 }
