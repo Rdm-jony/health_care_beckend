@@ -5,7 +5,6 @@ import { envVars } from "../config/env"
 import { User } from "../modules/user/user.model"
 import { JwtPayload } from "jsonwebtoken"
 import httpStatusCode from "http-status-codes"
-import { IsActive } from "../modules/user/user.interface"
 
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -23,11 +22,6 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
 
         if (!isUserExist.isVerified) {
             throw new AppError(httpStatusCode.BAD_REQUEST, "User is not verified")
-
-        }
-
-        if (isUserExist.isActive !== IsActive.ACTIVE) {
-            throw new AppError(httpStatusCode.BAD_REQUEST, `User is ${isUserExist.isActive}`)
 
         }
 

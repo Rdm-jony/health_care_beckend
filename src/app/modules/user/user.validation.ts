@@ -38,7 +38,7 @@ export const updateUserUserZodSchema = z.object({
         .max(50, { message: "Name cannot exceed 50 characters." }).optional(),
 
     phone: z
-        .string("Not a string")
+        .string("required")
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
             message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
         })
