@@ -7,10 +7,10 @@ import { JwtPayload } from "jsonwebtoken";
 
 
 const addSpecialize = catchAsync(async (req: Request, res: Response) => {
-    const newSpecialization = await doctorServices.addSpecialize(req.body)
+    const newSpecialize = await doctorServices.addSpecialize(req.body)
 
     sendResponse(res, {
-        data: newSpecialization,
+        data: newSpecialize,
         message: "doctor specializaion create succesfully!",
         statusCode: httpStatusCode.CREATED,
         success: true

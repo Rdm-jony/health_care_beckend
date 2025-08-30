@@ -1,11 +1,12 @@
 import AppError from "../../errorHelpers/AppError";
-import { IAuthProvider, IUser, Role } from "./user.interface";
+import { DoctorRequest, IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import httpStatusCode from "http-status-codes"
 import bcrypt from "bcryptjs"
 import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
+import { QueryBuilder } from "../../utils/queryBuilder";
 
 const createUser = async (payload: Partial<IUser>) => {
     const email = payload.email
@@ -92,10 +93,42 @@ const getMe = async (userId: string) => {
     return isUserExists
 }
 
+const sendDoctorRequest = async (userId: string) => {
+    const isUserExist = await User.findById(userId)
+    if (!isUserExist) {
+        throw new AppError(httpStatusCode.NOT_FOUND, "user not found!")
+    }
+    isUserExist.permitToDoctor = DoctorRequest.PENDING
+    isUserExist.save()
+
+}
+
+const getAllPendingRequest = async (query: Record<string, string>) => {
+    const queryBuilder = new QueryBuilder(User.find({ permitToDoctor: DoctorRequest.PENDING }), query)
+    const transaction = queryBuilder
+        // .search(transactionSearchableFields)
+        .filter()
+        .sort()
+        .fields()
+        .paginate()
+    const [data, meta] = await Promise.all([
+        transaction.build(),
+        queryBuilder.getMeta()
+    ])
+    return {
+        data,
+        meta
+    }
+
+
+}
+
 export const userService = {
     createUser,
     getAllUser,
     updateUser,
     getMe,
-    getSingleUser
+    getSingleUser,
+    sendDoctorRequest,
+    getAllPendingRequest
 }

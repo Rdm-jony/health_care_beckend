@@ -8,7 +8,7 @@ import httpStatusCode from "http-status-codes"
 
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.headers.authorization
+        const token = req.headers.authorization || req?.cookies.accessToken
         if (!token) {
             throw new AppError(403, "No Token Recieved")
         }
@@ -29,6 +29,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
             throw new AppError(httpStatusCode.BAD_REQUEST, "User is deleted")
 
         }
+
 
         if (!authRoles.includes(decodedToken.role)) {
             throw new AppError(403, "You are not permitted to view this route!!!")

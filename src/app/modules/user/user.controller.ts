@@ -35,7 +35,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
     const decodedToken = req.user as JwtPayload
     const payload: Partial<IUser> = {
         ...req.body,
-        picture:req?.file?.path
+        picture: req?.file?.path
     }
     const user = await userService.updateUser(userId, payload, decodedToken)
     sendResponse(res, {
@@ -65,6 +65,27 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
         success: true
     })
 })
+const sendDoctorRequest = catchAsync(async (req: Request, res: Response) => {
+    const decodedToken = req.user as JwtPayload
+    await userService.sendDoctorRequest(decodedToken.userId)
+    sendResponse(res, {
+        data: null,
+        message: "Request sent",
+        statusCode: httpStatusCode.OK,
+        success: true,
+    })
+})
+const getAllPendingRequest = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query as Record<string, string>
+    const allPendingReq = await userService.getAllPendingRequest(query)
+    sendResponse(res, {
+        data: allPendingReq.data,
+        message: "Request sent",
+        statusCode: httpStatusCode.OK,
+        success: true,
+        meta: {...allPendingReq.meta,total:allPendingReq?.data.length}
+    })
+})
 
 
 
@@ -73,5 +94,7 @@ export const userController = {
     getAllUser,
     updateUser,
     getSingleUser,
-    getMe
+    getMe,
+    sendDoctorRequest,
+    getAllPendingRequest
 }

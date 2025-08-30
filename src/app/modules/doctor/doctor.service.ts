@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../errorHelpers/AppError";
-import { IUser, Role } from "../user/user.interface";
+import { DoctorRequest, IUser, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { IDoctor, ISpecialization } from "./doctor.interface";
 import httpStatusCode from "http-status-codes"
 import { Doctor, Specialization } from "./doctor.model";
 import { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
+import httpStausCode from "http-status-codes"
 
 const addSpecialize = async (payload: ISpecialization) => {
-    const existingSpecialize = await Specialization.findOne({ name: payload.name });
+    const existingSpecialize = await Specialization.findOne({ name: payload.name.toLowerCase() });
 
     if (existingSpecialize) {
-        throw new Error("doctor specialization already exists.");
+        throw new AppError(httpStausCode.BAD_REQUEST, "doctor specialization already exists.");
     }
 
-    return await Specialization.create(payload);
+    await Specialization.create({ name: payload.name.toLowerCase() });
 }
 
 const updateSpecialize = async (id: string, payload: ISpecialization) => {
@@ -41,10 +42,24 @@ const addDoctor = async (payload: IDoctor) => {
         throw new AppError(httpStatusCode.NOT_FOUND, "specialize not found!")
     }
     if (isUserExist.role == Role.DOCTOR) {
-        throw new AppError(httpStatusCode.NOT_FOUND, "user aleady a doctor")
+        throw new AppError(httpStatusCode.NOT_FOUND, "user already a doctor")
+
     }
-    const doctor = (await (await Doctor.create(payload)).populate("user")).populate("specialization")
-    return doctor
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const doctor = (await (await Doctor.create(payload)).populate("user")).populate("specialization")
+        await User.findByIdAndUpdate(payload.user, { role: Role.DOCTOR, permitToDoctor: DoctorRequest.APPROVED })
+        await session.commitTransaction();
+        session.endSession();
+        return doctor
+    } catch (error: any) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error(error);
+        throw new AppError(httpStatusCode.BAD_REQUEST, "Doctor update failed");
+    }
+
 
 }
 
@@ -121,7 +136,7 @@ const updateDoctor = async (
             { new: true, runValidators: true, session }
         ).populate("user specialization").exec(); // ✅ populate
 
-        await session.commitTransaction(); 
+        await session.commitTransaction();
         session.endSession();
 
         return updatedDoctor;

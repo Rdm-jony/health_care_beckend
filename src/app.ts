@@ -9,6 +9,7 @@ import { envVars } from "./app/config/env";
 import './app/config/passport';
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import notFound from "./app/middlewares/notFound";
 const app = express()
 
 app.use(express.json())
@@ -32,9 +33,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', async (req: Request, res: Response) => {
-    res.json(200).send({ success: true, message: "user auth server running...✔" })
+    res.status(200).json({ success: true, message: "health care server running...✔" })
 })
 
 app.use(globalErrorHandler)
+app.use(notFound)
 
 export default app

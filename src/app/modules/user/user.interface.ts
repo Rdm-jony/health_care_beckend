@@ -19,18 +19,26 @@ export interface IAuthProvider {
     providerId: string
 }
 
+export enum DoctorRequest {
+    NONE = "NONE",
+    PENDING = "PENDING",
+    REJECTED = "REJECTED",
+    APPROVED = "APPROVED"
+}
+
 export interface IUser {
     _id?: Types.ObjectId,
     name: string,
     email: string,
     password?: string,
-    phone: string,
-    gender:Gender,
-    address: string,
+    phone?: string,
+    gender?: Gender,
+    address?: string,
     picture?: string,
     isDeleted?: boolean,
     isVerified?: boolean,
     role: Role,
+    permitToDoctor: DoctorRequest,
     auth: IAuthProvider[]
 
 }

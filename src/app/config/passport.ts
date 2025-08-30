@@ -6,8 +6,6 @@ import { User } from "../modules/user/user.model";
 import brcypt from "bcryptjs"
 import { envVars } from "./env";
 import { IAuthProvider } from "../modules/user/user.interface";
-import AppError from "../errorHelpers/AppError";
-import httpStatusCode from "http-status-codes"
 
 // Local Strategy
 passport.use(
@@ -20,22 +18,22 @@ passport.use(
             if (!isUserExist) {
                 return done("User does not exist")
             }
-            if (!isUserExist.isVerified) {
-                throw new AppError(httpStatusCode.BAD_REQUEST, "User is not verified")
-
-            }
-
-          
-
-            if (isUserExist.isDeleted) {
-                throw new AppError(httpStatusCode.BAD_REQUEST, "User is deleted")
-
-            }
             const isPasswordCorrect = await brcypt.compare(password, isUserExist.password as string);
             if (!isPasswordCorrect) {
                 return done("Invalid email or password.");
             }
-            const user=isUserExist.toObject()
+
+            if (!isUserExist.isVerified) {
+                return done("User is not verified")
+
+            }
+
+            if (isUserExist.isDeleted) {
+                return done("User is deleted")
+
+            }
+
+            const user = isUserExist.toObject()
             delete user.password
 
             return done(null, user)
@@ -75,13 +73,13 @@ passport.use(
                 })
             }
             if (!isUserExist.isVerified) {
-                throw new AppError(httpStatusCode.BAD_REQUEST, "User is not verified")
+              return  done("User is not verified")
 
             }
 
 
             if (isUserExist.isDeleted) {
-                throw new AppError(httpStatusCode.BAD_REQUEST, "User is deleted")
+               return done("User is deleted")
 
             }
 
