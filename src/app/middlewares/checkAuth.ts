@@ -5,11 +5,10 @@ import { envVars } from "../config/env"
 import { User } from "../modules/user/user.model"
 import { JwtPayload } from "jsonwebtoken"
 import httpStatusCode from "http-status-codes"
-import { IsActive } from "../modules/user/user.interface"
 
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.headers.authorization
+        const token = req.headers.authorization || req?.cookies.accessToken
         if (!token) {
             throw new AppError(403, "No Token Recieved")
         }
@@ -26,15 +25,11 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
 
         }
 
-        if (isUserExist.isActive !== IsActive.ACTIVE) {
-            throw new AppError(httpStatusCode.BAD_REQUEST, `User is ${isUserExist.isActive}`)
-
-        }
-
         if (isUserExist.isDeleted) {
             throw new AppError(httpStatusCode.BAD_REQUEST, "User is deleted")
 
         }
+
 
         if (!authRoles.includes(decodedToken.role)) {
             throw new AppError(403, "You are not permitted to view this route!!!")

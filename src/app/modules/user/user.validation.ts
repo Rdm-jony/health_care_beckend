@@ -1,5 +1,5 @@
 import z from "zod";
-import { Gender, Role } from "./user.interface";
+import { DoctorRequest, Gender, Role } from "./user.interface";
 
 export const createUserZodSchema = z.object({
     name: z.string()
@@ -20,15 +20,16 @@ export const createUserZodSchema = z.object({
             message: "Password must contain at least 1 number.",
         }).nonempty("required"),
     phone: z
-        .string("Not a string")
+        .string()
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
             message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
-        })
+        }).optional()
     ,
-    gender: z.enum(Object.values(Gender) as [string]),
+    permitToDoctor: z.enum(Object.values(DoctorRequest)).default(DoctorRequest.NONE),
+    gender: z.enum(Object.values(Gender) as [string]).optional(),
     address: z
-        .string("Not a string")
-        .max(200, { message: "Address cannot exceed 200 characters." })
+        .string()
+        .max(200, { message: "Address cannot exceed 200 characters." }).optional()
 
 
 })
@@ -38,7 +39,7 @@ export const updateUserUserZodSchema = z.object({
         .max(50, { message: "Name cannot exceed 50 characters." }).optional(),
 
     phone: z
-        .string("Not a string")
+        .string("required")
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
             message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
         })

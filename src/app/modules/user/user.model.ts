@@ -1,29 +1,30 @@
 import { model, Schema } from "mongoose";
-import { Gender, IAuthProvider, IUser, Role } from "./user.interface";
+import { DoctorRequest, Gender, IAuthProvider, IUser, Role } from "./user.interface";
 import { boolean } from "zod";
 
-export const authProvideSchema=new Schema<IAuthProvider>({
-    provider:{type:String,required:true},
-    providerId:{type:String,required:true}
-},{
-    versionKey:false,
-    _id:false
+export const authProvideSchema = new Schema<IAuthProvider>({
+    provider: { type: String, required: true },
+    providerId: { type: String, required: true }
+}, {
+    versionKey: false,
+    _id: false
 })
 
 const userSchema = new Schema<IUser>({
-    name:{type:String,required:true},
-    email:{type:String,required:true,unique:true},
-    password:{type:String},
-    address:{type:String},
-    gender:{type:String,enum:Object.values(Gender),required:true},
-    isDeleted:{type:boolean,default:false},
-    isVerified:{type:boolean,default:false},
-    phone:{type:String},
-    picture:{type:String},
-    role:{type:String,enum:Object.values(Role),default:Role.USER},
-    auth:[authProvideSchema]
-},{
-    timestamps:true
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String },
+    address: { type: String },
+    gender: { type: String, enum: Object.values(Gender) },
+    isDeleted: { type: boolean, default: false },
+    isVerified: { type: boolean, default: false },
+    phone: { type: String },
+    picture: { type: String },
+    permitToDoctor: { type: String, enum: Object.values(DoctorRequest), default: DoctorRequest.NONE },
+    role: { type: String, enum: Object.values(Role), default: Role.USER },
+    auth: [authProvideSchema]
+}, {
+    timestamps: true
 })
 
-export const User=model("User",userSchema)
+export const User = model("User", userSchema)

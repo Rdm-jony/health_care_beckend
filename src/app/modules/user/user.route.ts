@@ -11,8 +11,10 @@ const router = Router()
 
 
 router.post('/create', multerUpload.single("file"), validateRequest(createUserZodSchema), userController.createUser)
+router.post('/request-send', checkAuth(Role.USER), userController.sendDoctorRequest)
+router.get('/request/all', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), userController.getAllPendingRequest)
 router.get("/all-users", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), userController.getAllUser)
-router.get("/get-me", checkAuth(...Object.values(Role)), userController.getMe)
+router.get("/me", checkAuth(...Object.values(Role)), userController.getMe)
 router.get("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), userController.getSingleUser)
 router.patch("/:id", checkAuth(...Object.values(Role)), multerUpload.single("file"), validateRequest(updateUserUserZodSchema), userController.updateUser)
 
