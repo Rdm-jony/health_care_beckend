@@ -49,8 +49,20 @@ const addDoctor = catchAsync(async (req: Request, res: Response) => {
         success: true
     })
 })
+const rejectRequest = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.params.id
+    await doctorServices.rejectRequest(userId)
+
+    sendResponse(res, {
+        data: null,
+        message: "permit To doctor reject!",
+        statusCode: httpStatusCode.OK,
+        success: true
+    })
+})
 const updateDoctor = catchAsync(async (req: Request, res: Response) => {
     const doctorId = req.params.id
+
     const decodedToken = req.user as JwtPayload
     const updatedDoctor = await doctorServices.updateDoctor(doctorId, decodedToken, req.body)
 
@@ -68,5 +80,6 @@ export const doctorControllers = {
     addSpecialize,
     updateSpecialize,
     getAllSpecialize,
-    updateDoctor
+    updateDoctor,
+    rejectRequest
 }

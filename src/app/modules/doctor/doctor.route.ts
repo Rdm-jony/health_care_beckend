@@ -13,5 +13,6 @@ router.get("/specialize/all", doctorControllers.getAllSpecialize)
 router.patch("/specialize/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(specializationSchema), doctorControllers.updateSpecialize)
 
 router.post("/request-approve", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(createDoctorZodSchema), doctorControllers.addDoctor)
+router.patch(`/request-reject/:id`, checkAuth(Role.ADMIN, Role.SUPER_ADMIN), doctorControllers.rejectRequest)
 router.patch("/:id", checkAuth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN), doctorControllers.updateDoctor)
 export const doctorRoutes = router

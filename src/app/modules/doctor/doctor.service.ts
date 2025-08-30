@@ -63,6 +63,28 @@ const addDoctor = async (payload: IDoctor) => {
 
 }
 
+const rejectRequest = async (userId: string) => {
+    const isUserExist = await User.findById(userId)
+    if (!isUserExist) {
+        throw new AppError(httpStatusCode.NOT_FOUND, "user not found!")
+    }
+    if (isUserExist.isDeleted) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "user is deleted!")
+
+    }
+    if (!isUserExist.isVerified) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "user is not verified!")
+
+    }
+
+    if (isUserExist.permitToDoctor != DoctorRequest.PENDING) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "Request can only be rejected when pending!")
+
+    }
+    isUserExist.permitToDoctor = DoctorRequest.REJECTED
+    await isUserExist.save()
+}
+
 const updateDoctor = async (
     doctorId: string,
     decodedToken: JwtPayload,
@@ -155,5 +177,6 @@ export const doctorServices = {
     addSpecialize,
     updateSpecialize,
     getAllSpecialize,
-    updateDoctor
+    updateDoctor,
+    rejectRequest
 }
