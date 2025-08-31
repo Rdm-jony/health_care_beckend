@@ -8,6 +8,9 @@ import { Doctor, Specialization } from "./doctor.model";
 import { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
 import httpStausCode from "http-status-codes"
+import { doctorSearChQueryFields } from "./doctor.constant";
+import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder";
+import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
 
 const addSpecialize = async (payload: ISpecialization) => {
     const existingSpecialize = await Specialization.findOne({ name: payload.name.toLowerCase() });
@@ -160,7 +163,9 @@ const updateDoctor = async (
 
         await session.commitTransaction();
         session.endSession();
-
+        if (ifUserExist?.picture) {
+            await deleteImageFromCloudinary(ifUserExist.picture)
+        }
         return updatedDoctor;
 
     } catch (error: any) {
@@ -170,6 +175,27 @@ const updateDoctor = async (
         throw new AppError(httpStatusCode.BAD_REQUEST, "Doctor update failed");
     }
 };
+const getAllDoctors = async (query: Record<string, string>) => {
+    const aggBuilder = new AggregationQueryBuilder(query);
+
+    const pipeline = aggBuilder
+        .lookup("user", "users") // 'user' field from 'users' collection
+        .lookup("specialization", "specializations") // same for specialization
+        .filter()
+        .search(doctorSearChQueryFields) // searching nested fields
+        .sort()
+        .fields()
+        .paginate()
+        .build();
+
+    const data = await Doctor.aggregate(pipeline);
+    const meta = await aggBuilder.getMeta(Doctor);
+
+    return {
+        data,
+        meta,
+    };
+};
 
 
 export const doctorServices = {
@@ -178,5 +204,6 @@ export const doctorServices = {
     updateSpecialize,
     getAllSpecialize,
     updateDoctor,
-    rejectRequest
+    rejectRequest,
+    getAllDoctors
 }

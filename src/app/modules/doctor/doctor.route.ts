@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { doctorControllers } from "./doctor.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createDoctorZodSchema, specializationSchema } from "./doctor.validation";
+import { createDoctorZodSchema, specializationSchema, updateDoctorZodSchema } from "./doctor.validation";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
+import { multerUpload } from "../../config/multer.config";
 
 const router = Router()
 
@@ -13,6 +14,7 @@ router.get("/specialize/all", doctorControllers.getAllSpecialize)
 router.patch("/specialize/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(specializationSchema), doctorControllers.updateSpecialize)
 
 router.post("/request-approve", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(createDoctorZodSchema), doctorControllers.addDoctor)
+router.get("/all", doctorControllers.getAllDoctors)
 router.patch(`/request-reject/:id`, checkAuth(Role.ADMIN, Role.SUPER_ADMIN), doctorControllers.rejectRequest)
-router.patch("/:id", checkAuth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN), doctorControllers.updateDoctor)
+router.patch("/:id", checkAuth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN), multerUpload.single("file"), validateRequest(updateDoctorZodSchema), doctorControllers.updateDoctor)
 export const doctorRoutes = router

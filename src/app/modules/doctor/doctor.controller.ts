@@ -4,6 +4,8 @@ import { doctorServices } from "./doctor.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatusCode from "http-status-codes"
 import { JwtPayload } from "jsonwebtoken";
+import { IUser } from "../user/user.interface";
+import { IDoctor } from "./doctor.interface";
 
 
 const addSpecialize = catchAsync(async (req: Request, res: Response) => {
@@ -60,11 +62,30 @@ const rejectRequest = catchAsync(async (req: Request, res: Response) => {
         success: true
     })
 })
+
+const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
+    const query = req.query as Record<string, string>
+
+    const allDoctors = await doctorServices.getAllDoctors(query)
+
+    sendResponse(res, {
+        data: allDoctors.data,
+        message: "all doctor retrieved succesfully!",
+        statusCode: httpStatusCode.OK,
+        success: true,
+        meta: allDoctors.meta
+    })
+})
+
 const updateDoctor = catchAsync(async (req: Request, res: Response) => {
     const doctorId = req.params.id
 
     const decodedToken = req.user as JwtPayload
-    const updatedDoctor = await doctorServices.updateDoctor(doctorId, decodedToken, req.body)
+    const payload: Partial<IUser> & Partial<IDoctor> = {
+        picture: req?.file?.path,
+        ...req.body
+    }
+    const updatedDoctor = await doctorServices.updateDoctor(doctorId, decodedToken, payload)
 
     sendResponse(res, {
         data: updatedDoctor,
@@ -75,11 +96,14 @@ const updateDoctor = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+
+
 export const doctorControllers = {
     addDoctor,
     addSpecialize,
     updateSpecialize,
     getAllSpecialize,
     updateDoctor,
-    rejectRequest
+    rejectRequest,
+    getAllDoctors
 }
