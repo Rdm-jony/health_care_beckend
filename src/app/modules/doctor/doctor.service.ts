@@ -11,6 +11,9 @@ import httpStausCode from "http-status-codes"
 import { doctorSearChQueryFields } from "./doctor.constant";
 import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder";
 import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
+import { Booking } from "../booking/booking.model";
+import { BOOKING_STATUS } from "../booking/booking.interface";
+import { generateSlots } from "../../utils/generateSlots";
 
 const addSpecialize = async (payload: ISpecialization) => {
     const existingSpecialize = await Specialization.findOne({ name: payload.name.toLowerCase() });
@@ -197,6 +200,49 @@ const getAllDoctors = async (query: Record<string, string>) => {
     };
 };
 
+const getSingleDoctor = async (doctorId: string) => {
+    const findDoctor = await Doctor.findById(doctorId).populate("user")
+    if (!findDoctor) {
+        throw new AppError(httpStatusCode.NOT_FOUND, "doctor not found")
+    }
+    const isUserExist = await User.findById(findDoctor.user)
+    if (!isUserExist) {
+        throw new AppError(httpStatusCode.NOT_FOUND, "doctor user info not found")
+    }
+
+    return findDoctor
+}
+
+const getAvailableSlots = async (doctorId: string, date: string) => {
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) throw new Error("Doctor not found");
+    if (!date) throw new Error("date not found");
+
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    const dayOfWeek = daysOfWeek[new Date(date).getDay()];
+
+    // doctor-এর ওই দিনের availability বের করা
+    const availability = doctor?.availableTimes.find((slot) => slot.day === dayOfWeek);
+    if (!availability) return [];
+
+    // slot generate করা
+    let slots = generateSlots(availability.startTime, availability.endTime, availability.slotDuration);
+
+    // already booked slot বের করা
+    const bookedSlots = await Booking.find({ doctor: doctorId, date, status: BOOKING_STATUS.COMPLETE });
+
+    // available slot filter করা
+    slots = slots.filter(
+        (slot) =>
+            !bookedSlots.some(
+                (b) => b.startTime === slot.startTime && b.endTime === slot.endTime
+            )
+    );
+
+    return slots;
+};
+
 
 export const doctorServices = {
     addDoctor,
@@ -205,5 +251,7 @@ export const doctorServices = {
     getAllSpecialize,
     updateDoctor,
     rejectRequest,
-    getAllDoctors
+    getAllDoctors,
+    getSingleDoctor,
+    getAvailableSlots
 }

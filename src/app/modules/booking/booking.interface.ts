@@ -9,6 +9,8 @@ export enum BOOKING_STATUS {
 export interface IBooking {
     doctor: Types.ObjectId,
     user: Types.ObjectId,
-    status:BOOKING_STATUS,
-    payment?:Types.ObjectId,
+    startTime: string; 
+    endTime: string;
+    status: BOOKING_STATUS,
+    payment?: Types.ObjectId,
 }

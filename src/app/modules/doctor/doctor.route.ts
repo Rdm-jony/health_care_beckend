@@ -15,6 +15,8 @@ router.patch("/specialize/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validat
 
 router.post("/request-approve", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(createDoctorZodSchema), doctorControllers.addDoctor)
 router.get("/all", doctorControllers.getAllDoctors)
+router.get("/:id", doctorControllers.getSingleDoctor)
+router.get("/slots/:id", doctorControllers.getAvailableSlots)
 router.patch(`/request-reject/:id`, checkAuth(Role.ADMIN, Role.SUPER_ADMIN), doctorControllers.rejectRequest)
 router.patch("/:id", checkAuth(Role.DOCTOR, Role.ADMIN, Role.SUPER_ADMIN), multerUpload.single("file"), validateRequest(updateDoctorZodSchema), doctorControllers.updateDoctor)
 export const doctorRoutes = router

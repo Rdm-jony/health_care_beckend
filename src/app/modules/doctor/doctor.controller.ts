@@ -76,6 +76,17 @@ const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
         meta: allDoctors.meta
     })
 })
+const getSingleDoctor = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id as string
+    const doctor = await doctorServices.getSingleDoctor(id)
+
+    sendResponse(res, {
+        data: doctor,
+        message: "single doctor retrieved succesfully!",
+        statusCode: httpStatusCode.OK,
+        success: true,
+    })
+})
 
 const updateDoctor = catchAsync(async (req: Request, res: Response) => {
     const doctorId = req.params.id
@@ -95,6 +106,21 @@ const updateDoctor = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getAvailableSlots = catchAsync(async (req: Request, res: Response) => {
+    const doctorId = req.params.id
+    const date = req.query.date as string
+
+
+    const slots = await doctorServices.getAvailableSlots(doctorId, date)
+
+    sendResponse(res, {
+        data: slots,
+        message: "doctor slot retrive succesfully!",
+        statusCode: httpStatusCode.OK,
+        success: true
+    })
+})
+
 
 
 
@@ -105,5 +131,7 @@ export const doctorControllers = {
     getAllSpecialize,
     updateDoctor,
     rejectRequest,
-    getAllDoctors
+    getAllDoctors,
+    getSingleDoctor,
+    getAvailableSlots
 }

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-dynamic-delete */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import mongoose from "mongoose";
 import { excludeField } from "../constant/constant";
 
 export class AggregationQueryBuilder {
@@ -36,13 +38,17 @@ export class AggregationQueryBuilder {
   filter(): this {
     const filters = { ...this.query };
     for (const field of excludeField) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete filters[field];
     }
 
     const match: any = {};
     for (const [key, value] of Object.entries(filters)) {
-      match[key] = value;
+      // handle nested _id fields
+      if (key.endsWith("._id")) {
+        match[key] = new mongoose.Types.ObjectId(value);
+      } else {
+        match[key] = value;
+      }
     }
 
     if (Object.keys(match).length) {

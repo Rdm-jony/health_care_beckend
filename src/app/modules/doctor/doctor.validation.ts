@@ -96,3 +96,4 @@ export const updateDoctorZodSchema = z.object({
     licenceNumber: z.string().min(1, "Licence number is required"),
     specialization: z.string().min(1, "Specialization is required"),
 });
+
