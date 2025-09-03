@@ -3,6 +3,6 @@ export interface ISSLCommerz {
     email: string,
     address: string,
     amount: number,
-    phone: number,
+    phone: string,
     transactionId: string
 }
