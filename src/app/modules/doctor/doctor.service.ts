@@ -200,6 +200,8 @@ const getAllDoctors = async (query: Record<string, string>) => {
     };
 };
 
+
+
 const getSingleDoctor = async (doctorId: string) => {
     const findDoctor = await Doctor.findById(doctorId).populate("user")
     if (!findDoctor) {

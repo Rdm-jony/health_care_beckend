@@ -20,15 +20,20 @@ interface SendEmailOptions {
     to: string,
     subject: string,
     templateName: string,
-    templateData: Record<string, unknown>,
-    
+    templateData: Record<string,string>,
+    attachments?: {
+        filename: string,
+        content: Buffer | string,
+        contentType: string
+    }[]
 }
 
 export const sendMail = async ({
     to,
     subject,
     templateName,
-    templateData
+    templateData,
+    attachments,
 }: SendEmailOptions) => {
     try {
         const templatePath = path.join(__dirname, `ejsTemplate/${templateName}.ejs`)
@@ -37,7 +42,12 @@ export const sendMail = async ({
             from: envVars.MAIL_SENDER.SMTP_FROM,
             to: to,
             subject: subject,
-            html: html
+            html: html,
+            attachments: attachments?.map(attachment => ({
+                filename: attachment.filename,
+                content: attachment.content,
+                contentType: attachment.contentType
+            }))
         })
         console.log(`\u2709\uFE0F Email sent to ${to}: ${info.messageId}`);
 
