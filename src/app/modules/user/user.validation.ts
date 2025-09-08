@@ -36,10 +36,10 @@ export const createUserZodSchema = z.object({
 export const updateUserUserZodSchema = z.object({
     name: z.string("not a string")
         .min(2, { message: "Name must be at least 2 characters long." })
-        .max(50, { message: "Name cannot exceed 50 characters." }).optional(),
+        .max(50, { message: "Name cannot exceed 50 characters." }),
 
     phone: z
-        .string("required")
+        .string()
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
             message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
         })

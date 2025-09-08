@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    h1 { text-align: center; color: #007BFF; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background: #f5f5f5; }
+    .total { text-align: right; font-weight: bold; }
+    footer { text-align: center; margin-top: 20px; font-size: 12px; color: #555; }
+  </style>
+</head>
+<body>
+
+<h1>INVOICE</h1>
+
+<p><strong>Invoice To:</strong> <%= customerName %> | <%= customerEmail %></p>
+<p><strong>Invoice Number:</strong> <%= transactionId?transactionId: 'N/A' %> | <strong>Date:</strong> <%= date %></p>
+
+<table>
+  <tr><th>Item</th><th>Details</th><th>Price</th></tr>
+  <tr>
+    <td>Doctor Appointment</td>
+    <td>Dr. <%= doctorName %> (<%= specialization %>)<br>From: <%= startTime %> - To: <%= endTime %></td>
+    <td>$<%= total %></td>
+  </tr>
+  <tr>
+    <td>Payment Method</td>
+    <td colspan="2"><%= paymentType %></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="total">Total</td>
+    <td>$<%= total %></td>
+  </tr>
+</table>
+
+<footer>Thank you for your booking with Health Care!</footer>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
 import { QueryBuilder } from "../../utils/queryBuilder";
+import { Doctor, Specialization } from "../doctor/doctor.model";
 
 const createUser = async (payload: Partial<IUser>) => {
     const email = payload.email
@@ -85,13 +86,50 @@ const getSingleUser = async (userId: string) => {
     return isUserExists
 }
 const getMe = async (userId: string) => {
-    const isUserExists = await User.findById(userId).select("-password")
+    const isUserExists = await User.findById(userId).select("-password");
     if (!isUserExists) {
-        throw new AppError(httpStatusCode.NOT_FOUND, "user not found!")
+        throw new AppError(httpStatusCode.NOT_FOUND, "user not found!");
     }
 
-    return isUserExists
-}
+    if (isUserExists.role === Role.DOCTOR) {
+        const findDoctor = await Doctor.findOne({ user: userId });
+
+        if (!findDoctor) {
+            throw new AppError(httpStatusCode.NOT_FOUND, "doctor profile not found!");
+        }
+        const specializaion = await Specialization.findById(findDoctor.specialization)
+
+        if (!specializaion) {
+            throw new AppError(httpStatusCode.NOT_FOUND, "specilaization  not found!");
+        }
+
+        // Flatten the user object into the doctor document
+        const { ...doctorData } = findDoctor.toObject(); // convert Mongoose doc to plain object
+
+        const flattenedDoctor = {
+            ...doctorData,
+            specialize: specializaion.name,
+            name: isUserExists.name,
+            email: isUserExists.email,
+            phone: isUserExists.phone,
+            address: isUserExists.address,
+            gender: isUserExists.gender,
+            // add other user fields as needed:
+            picture: isUserExists.picture,
+            isDeleted: isUserExists.isDeleted,
+            isVerified: isUserExists.isVerified,
+            role: isUserExists.role,
+            auth: isUserExists.auth,
+            permitToDoctor: isUserExists.permitToDoctor,
+
+        };
+
+        return flattenedDoctor;
+    }
+
+    return isUserExists;
+};
+
 
 const sendDoctorRequest = async (userId: string) => {
     const isUserExist = await User.findById(userId)

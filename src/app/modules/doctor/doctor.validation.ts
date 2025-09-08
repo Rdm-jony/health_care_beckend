@@ -71,3 +71,29 @@ export const createDoctorZodSchema = z.object({
         }),
 });
 
+export const updateDoctorZodSchema = z.object({
+    name: z.string("not a string")
+        .min(2, { message: "Name must be at least 2 characters long." })
+        .max(50, { message: "Name cannot exceed 50 characters." }),
+
+    phone: z
+        .string()
+        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        })
+        .or(z.literal("")),
+    address: z.string(),
+    gender: z.enum(["MALE", "FEMALE", "OTHER"], "Select gender").optional(),
+
+    about: z.string().min(1, "About is required"),
+
+    availableTimes: z
+        .array(AvailableSlotSchema)
+        .nonempty("At least one available slot is required"),
+    degree: z.string().min(1, "Degree is required"),
+    experience: z.coerce.number().min(0),
+    fees: z.coerce.number().min(0),
+    licenceNumber: z.string().min(1, "Licence number is required"),
+    specialization: z.string().min(1, "Specialization is required"),
+});
+

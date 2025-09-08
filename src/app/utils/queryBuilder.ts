@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Query } from "mongoose";
 import { excludeField } from "../constant/constant";
 
@@ -23,14 +24,21 @@ export class QueryBuilder<T> {
         return this;
     }
 
-    // search(searchableField: string[]): this {
-    //     const searchTerm = this.query?.searchTerm || ""
-    //     const searchQuery = {
-    //         $or: searchableField?.map(field => ({ [field]: { $regex: searchTerm, $options: "i" } }))
-    //     }
-    //     this.modelQuery = this.modelQuery.find(searchQuery)
-    //     return this
-    // }
+    search(searchableField: string[]): this {
+        const searchTerm = this.query?.searchTerm;
+
+        if (searchTerm) {
+            const searchQuery = {
+                $or: searchableField.map(field => ({
+                    [field]: { $regex: searchTerm, $options: "i" }
+                }))
+            };
+            this.modelQuery = this.modelQuery.find(searchQuery);
+        }
+
+        return this;
+    }
+
 
     sort(): this {
 
@@ -57,6 +65,11 @@ export class QueryBuilder<T> {
         this.modelQuery = this.modelQuery.skip(skip).limit(limit)
 
         return this;
+    }
+
+    populate(populateField:any): this {
+        this.modelQuery = this.modelQuery.populate(populateField )
+        return this
     }
 
     build() {
