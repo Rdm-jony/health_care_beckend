@@ -1,0 +1,30 @@
+[33m5377b94[m[33m ([m[1;36mHEAD -> [m[1;32mbooking[m[33m, [m[1;31morigin/booking[m[33m)[m HEAD@{0}: commit: refactor code
+[33m8d5e192[m HEAD@{1}: reset: moving to HEAD~1
+[33m475c05c[m HEAD@{2}: reset: moving to HEAD~1
+[33m7f8bfc1[m HEAD@{3}: commit: add home banner
+[33m475c05c[m HEAD@{4}: commit: implement success,cancel and fail route
+[33m8d5e192[m HEAD@{5}: commit: init payment service
+[33m09d329f[m HEAD@{6}: commit: compltete cash booking
+[33mc016533[m HEAD@{7}: commit: refactor time in booking
+[33m6b55ca5[m HEAD@{8}: commit: work on avaliable slots get
+[33m93b1f55[m HEAD@{9}: commit: compete doctor profile update
+[33m7e79171[m HEAD@{10}: commit: complete create a booking
+[33m4f8ffb0[m[33m ([m[1;31morigin/development[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{11}: pull origin development: Fast-forward
+[33m6274bd1[m[33m ([m[1;31morigin/doctor_auth[m[33m, [m[1;32mdoctor_auth[m[33m)[m HEAD@{12}: checkout: moving from doctor_auth to booking
+[33m6274bd1[m[33m ([m[1;31morigin/doctor_auth[m[33m, [m[1;32mdoctor_auth[m[33m)[m HEAD@{13}: commit: code refactor
+[33mbf323d1[m HEAD@{14}: commit: add doctor as depend on user request
+[33md336951[m HEAD@{15}: commit: doctor route crate
+[33m138f49d[m HEAD@{16}: commit: doctor-specialize-route-set
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{17}: checkout: moving from user to doctor_auth
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{18}: checkout: moving from user to user
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{19}: checkout: moving from development to user
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{20}: checkout: moving from user to development
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{21}: checkout: moving from development to user
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{22}: checkout: moving from user to development
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{23}: checkout: moving from development to user
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{24}: checkout: moving from user to development
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{25}: checkout: moving from development to user
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{26}: checkout: moving from user to development
+[33m1b40bcc[m[33m ([m[1;31morigin/user[m[33m, [m[1;32muser[m[33m)[m HEAD@{27}: commit: use and project setup
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{28}: checkout: moving from development to user
+[33me2c3db6[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{29}: clone: from https://github.com/Rdm-jony/user_auth_beckend.git
