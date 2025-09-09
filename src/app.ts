@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.set("trust proxy",1)
 app.use(cors({
-    origin: envVars.FRONT_END_URL,
+    origin: ["https://health-care-frontend-ten.vercel.app","http://localhost:5173"],
     credentials: true
 }))
 app.use(

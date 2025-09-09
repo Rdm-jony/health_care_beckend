@@ -96,12 +96,12 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 
     res.clearCookie("accessToken", {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "lax"
     })
     res.clearCookie("refreshToken", {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "lax"
     })
 
@@ -136,4 +136,4 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-export const authController = { credentialsLogin, getNewAccessToken, googleCallback, changePassword, setPassword, logout, forgetPassword,resetPassword }
+export const authController = { credentialsLogin, getNewAccessToken, googleCallback, changePassword, setPassword, logout, forgetPassword, resetPassword }

@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.doctorRoutes = void 0;
+const express_1 = require("express");
+const doctor_controller_1 = require("./doctor.controller");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const doctor_validation_1 = require("./doctor.validation");
+const checkAuth_1 = require("../../middlewares/checkAuth");
+const user_interface_1 = require("../user/user.interface");
+const multer_config_1 = require("../../config/multer.config");
+const router = (0, express_1.Router)();
+// doctor specialize
+router.post("/specialize/create", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(doctor_validation_1.specializationSchema), doctor_controller_1.doctorControllers.addSpecialize);
+router.get("/specialize/all", doctor_controller_1.doctorControllers.getAllSpecialize);
+router.patch("/specialize/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(doctor_validation_1.specializationSchema), doctor_controller_1.doctorControllers.updateSpecialize);
+router.post("/request-approve", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), (0, validateRequest_1.validateRequest)(doctor_validation_1.createDoctorZodSchema), doctor_controller_1.doctorControllers.addDoctor);
+router.get("/all", doctor_controller_1.doctorControllers.getAllDoctors);
+router.get("/:id", doctor_controller_1.doctorControllers.getSingleDoctor);
+router.get("/slots/:id", doctor_controller_1.doctorControllers.getAvailableSlots);
+router.patch(`/request-reject/:id`, (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), doctor_controller_1.doctorControllers.rejectRequest);
+router.patch("/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.DOCTOR, user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), multer_config_1.multerUpload.single("file"), (0, validateRequest_1.validateRequest)(doctor_validation_1.updateDoctorZodSchema), doctor_controller_1.doctorControllers.updateDoctor);
+exports.doctorRoutes = router;

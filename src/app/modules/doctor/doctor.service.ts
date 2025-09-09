@@ -216,14 +216,14 @@ const getSingleDoctor = async (doctorId: string) => {
 }
 
 const getAvailableSlots = async (doctorId: string, date: string) => {
+
     const doctor = await Doctor.findById(doctorId);
-    if (!doctor) throw new Error("Doctor not found");
-    if (!date) throw new Error("date not found");
+    if (!doctor) throw new AppError(httpStatusCode.NOT_FOUND, "Doctor not found");
+    if (!date) throw new AppError(httpStatusCode.NOT_FOUND, "date not found");
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const dayOfWeek = daysOfWeek[new Date(date).getDay()];
-
     // doctor-এর ওই দিনের availability বের করা
     const availability = doctor?.availableTimes.find((slot) => slot.day === dayOfWeek);
     if (!availability) return [];
@@ -232,8 +232,7 @@ const getAvailableSlots = async (doctorId: string, date: string) => {
     let slots = generateSlots(availability.startTime, availability.endTime, availability.slotDuration);
 
     // already booked slot বের করা
-    const bookedSlots = await Booking.find({ doctor: doctorId, date, status: BOOKING_STATUS.COMPLETE });
-
+    const bookedSlots = await Booking.find({ doctor: doctorId,bookingDate: date, status: BOOKING_STATUS.COMPLETE });
     // available slot filter করা
     slots = slots.filter(
         (slot) =>
