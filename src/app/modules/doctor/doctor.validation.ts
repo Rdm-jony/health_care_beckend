@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import { DayOfWeek } from "./doctor.interface";
 
 export const specializationSchema = z.object({
-    name: z.string({ message: "name is required" }).min(1, "About must not be empty")
+    name: z.string({ message: "name is required" }).min(1, "About must not be empty"),
+    
 })
 
 // Slot schema

@@ -3,6 +3,7 @@ import { DayOfWeek, IAvailableSlot, IDoctor, ISpecialization } from "./doctor.in
 
 const specializationShema = new Schema<ISpecialization>({
     name: { type: String, required: true, unique: true, trim: true },
+    image: { type: String }
 })
 
 export const Specialization = model("Specialization", specializationShema)

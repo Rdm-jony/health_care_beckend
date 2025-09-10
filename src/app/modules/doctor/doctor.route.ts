@@ -9,9 +9,9 @@ import { multerUpload } from "../../config/multer.config";
 const router = Router()
 
 // doctor specialize
-router.post("/specialize/create", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(specializationSchema), doctorControllers.addSpecialize)
+router.post("/specialize/create", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), multerUpload.single("file"), validateRequest(specializationSchema), doctorControllers.addSpecialize)
 router.get("/specialize/all", doctorControllers.getAllSpecialize)
-router.patch("/specialize/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(specializationSchema), doctorControllers.updateSpecialize)
+router.patch("/specialize/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), multerUpload.single("file"), validateRequest(specializationSchema), doctorControllers.updateSpecialize)
 
 router.post("/request-approve", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(createDoctorZodSchema), doctorControllers.addDoctor)
 router.get("/all", doctorControllers.getAllDoctors)

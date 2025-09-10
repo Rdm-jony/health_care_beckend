@@ -5,11 +5,15 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatusCode from "http-status-codes"
 import { JwtPayload } from "jsonwebtoken";
 import { IUser } from "../user/user.interface";
-import { IDoctor } from "./doctor.interface";
+import { IDoctor, ISpecialization } from "./doctor.interface";
 
 
 const addSpecialize = catchAsync(async (req: Request, res: Response) => {
-    const newSpecialize = await doctorServices.addSpecialize(req.body)
+    const payload = {
+        image: req?.file?.path,
+        ...req.body
+    }
+    const newSpecialize = await doctorServices.addSpecialize(payload)
 
     sendResponse(res, {
         data: newSpecialize,
@@ -20,7 +24,11 @@ const addSpecialize = catchAsync(async (req: Request, res: Response) => {
 })
 const updateSpecialize = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id
-    const updatedSpecialization = await doctorServices.updateSpecialize(id, req.body)
+    const payload: Partial<ISpecialization> = {
+        image: req?.file?.path,
+        ...req.body
+    }
+    const updatedSpecialization = await doctorServices.updateSpecialize(id, payload)
 
     sendResponse(res, {
         data: updatedSpecialization,

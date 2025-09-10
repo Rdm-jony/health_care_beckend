@@ -98,14 +98,14 @@ const logout = catchAsync(async (req: Request, res: Response) => {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        domain: "http://localhost:5173",
+        // domain: "http://localhost:5173",
         path: "/",
     })
     res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        domain: "http://localhost:5173",
+        // domain: "http://localhost:5173",
         path: "/",
     })
 

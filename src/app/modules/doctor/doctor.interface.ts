@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 export interface ISpecialization {
     name: string,
+    image?:string
 }
 
 export enum DayOfWeek {

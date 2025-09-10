@@ -22,15 +22,18 @@ const addSpecialize = async (payload: ISpecialization) => {
         throw new AppError(httpStausCode.BAD_REQUEST, "doctor specialization already exists.");
     }
 
-    await Specialization.create({ name: payload.name.toLowerCase() });
+    await Specialization.create({ name: payload.name.toLowerCase(), image: payload.image });
 }
 
-const updateSpecialize = async (id: string, payload: ISpecialization) => {
+const updateSpecialize = async (id: string, payload: Partial<ISpecialization>) => {
     const isSpecializeExist = await Specialization.findById(id)
     if (!isSpecializeExist) {
         throw new AppError(httpStatusCode.NOT_FOUND, "specialize not found!")
     }
     const updateSpecialize = await Specialization.findByIdAndUpdate(id, payload, { new: true });
+    if (isSpecializeExist?.image) {
+        await deleteImageFromCloudinary(isSpecializeExist.image)
+    }
     return updateSpecialize;
 }
 
@@ -232,7 +235,7 @@ const getAvailableSlots = async (doctorId: string, date: string) => {
     let slots = generateSlots(availability.startTime, availability.endTime, availability.slotDuration);
 
     // already booked slot বের করা
-    const bookedSlots = await Booking.find({ doctor: doctorId,bookingDate: date, status: BOOKING_STATUS.COMPLETE });
+    const bookedSlots = await Booking.find({ doctor: doctorId, bookingDate: date, status: BOOKING_STATUS.COMPLETE });
     // available slot filter করা
     slots = slots.filter(
         (slot) =>
