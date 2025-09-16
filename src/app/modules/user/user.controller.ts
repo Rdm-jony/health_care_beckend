@@ -22,11 +22,13 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     })
 })
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
-    const user = await userService.getAllUser()
+    const query=req.query as Record<string,string>
+    const user = await userService.getAllUser(query)
     sendResponse(res, {
-        data: user,
+        data: user.data,
         message: "all user retrived successfully",
         statusCode: httpStatusCode.OK,
+        meta:user?.meta,
         success: true
     })
 })

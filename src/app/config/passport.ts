@@ -27,6 +27,10 @@ passport.use(
                 return done("User is not verified")
 
             }
+            if (isUserExist.isBlocked) {
+                return done("User is blocked")
+
+            }
 
             if (isUserExist.isDeleted) {
                 return done("User is deleted")
@@ -73,13 +77,17 @@ passport.use(
                 })
             }
             if (!isUserExist.isVerified) {
-              return  done("User is not verified")
+                return done("User is not verified")
+
+            }
+            if (isUserExist.isBlocked) {
+                return done("User is blocked")
 
             }
 
 
             if (isUserExist.isDeleted) {
-               return done("User is deleted")
+                return done("User is deleted")
 
             }
 

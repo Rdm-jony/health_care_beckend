@@ -18,6 +18,7 @@ const userSchema = new Schema<IUser>({
     gender: { type: String, enum: Object.values(Gender) },
     isDeleted: { type: boolean, default: false },
     isVerified: { type: boolean, default: false },
+    isBlocked: { type: boolean, default: false },
     phone: { type: String },
     picture: { type: String },
     permitToDoctor: { type: String, enum: Object.values(DoctorRequest), default: DoctorRequest.NONE },

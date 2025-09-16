@@ -127,7 +127,7 @@ const updateDoctor = async (
         throw new AppError(httpStatusCode.FORBIDDEN, "You are not authorized");
     }
 
-    if ((payload.isDeleted || payload.isVerified) && decodedToken.role === Role.DOCTOR) {
+    if ((payload.isDeleted || payload.isVerified || payload.isBlocked) && decodedToken.role === Role.DOCTOR) {
         throw new AppError(httpStatusCode.FORBIDDEN, "You are not authorized");
     }
 

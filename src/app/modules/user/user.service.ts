@@ -8,6 +8,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
 import { QueryBuilder } from "../../utils/queryBuilder";
 import { Doctor, Specialization } from "../doctor/doctor.model";
+import { userSearchField } from "./user.constants";
 
 const createUser = async (payload: Partial<IUser>) => {
     const email = payload.email
@@ -72,9 +73,24 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 
 }
 
-const getAllUser = async () => {
-    const users = await User.find({})
-    return users
+const getAllUser = async (query: Record<string, string>) => {
+    const queryBuilder = new QueryBuilder(User.find(), query)
+    const users = queryBuilder
+        .search(userSearchField)
+        .filter()
+        .sort()
+        .fields()
+        .paginate()
+    const [data, meta] = await Promise.all([
+        users.build(),
+        queryBuilder.getMeta()
+    ])
+
+
+    return {
+        data,
+        meta
+    }
 }
 
 const getSingleUser = async (userId: string) => {

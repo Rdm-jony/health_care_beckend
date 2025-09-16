@@ -42,15 +42,15 @@ export class QueryBuilder<T> {
 
     sort(): this {
 
-        const sort = this.query.sort || "-createdAt";
+        const sort = this.query?.sort || "-createdAt";
 
-        this.modelQuery = this.modelQuery.sort(sort)
+        this.modelQuery = this.modelQuery?.sort(sort)
 
         return this;
     }
     fields(): this {
 
-        const fields = this.query.fields?.split(",").join(" ") || ""
+        const fields = this.query?.fields?.split(",").join(" ") || ""
 
         this.modelQuery = this.modelQuery.select(fields)
 
@@ -58,8 +58,8 @@ export class QueryBuilder<T> {
     }
     paginate(): this {
 
-        const page = Number(this.query.page) || 1
-        const limit = Number(this.query.limit) || 10
+        const page = Number(this.query?.page) || 1
+        const limit = Number(this.query?.limit) || 10
         const skip = (page - 1) * limit
 
         this.modelQuery = this.modelQuery.skip(skip).limit(limit)
@@ -67,8 +67,8 @@ export class QueryBuilder<T> {
         return this;
     }
 
-    populate(populateField:any): this {
-        this.modelQuery = this.modelQuery.populate(populateField )
+    populate(populateField: any): this {
+        this.modelQuery = this.modelQuery.populate(populateField)
         return this
     }
 
@@ -79,8 +79,8 @@ export class QueryBuilder<T> {
     async getMeta() {
         const totalDocuments = await this.modelQuery.model.countDocuments()
 
-        const page = Number(this.query.page) || 1
-        const limit = Number(this.query.limit) || 10
+        const page = Number(this.query?.page) || 1
+        const limit = Number(this.query?.limit) || 10
 
         const totalPage = Math.ceil(totalDocuments / limit)
 

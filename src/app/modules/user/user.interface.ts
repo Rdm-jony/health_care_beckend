@@ -36,6 +36,7 @@ export interface IUser {
     address?: string,
     picture?: string,
     isDeleted?: boolean,
+    isBlocked?:boolean,
     isVerified?: boolean,
     role: Role,
     permitToDoctor: DoctorRequest,
