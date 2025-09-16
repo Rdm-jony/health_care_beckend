@@ -20,6 +20,6 @@ export const sendResponse = <T>(res: Response, data: ResponseData<T>) => {
         message: data.message,
         statusCode: data.statusCode,
         success: data.success,
-        mata: data.meta
+        meta: data.meta
     })
 }

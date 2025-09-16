@@ -12,6 +12,16 @@ router.get(
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
     StatsController.getUserStats
 );
+router.get(
+    "/specialize",
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    StatsController.getSpecializeStats
+);
+router.get(
+    "/doctor",
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    StatsController.getDoctorStats
+);
 
 
 export const statsRoutes = router;
