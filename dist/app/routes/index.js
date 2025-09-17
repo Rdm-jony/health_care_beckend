@@ -8,6 +8,7 @@ const otp_route_1 = require("../modules/otp/otp.route");
 const doctor_route_1 = require("../modules/doctor/doctor.route");
 const booking_route_1 = require("../modules/booking/booking.route");
 const payment_route_1 = require("../modules/payement/payment.route");
+const stats_route_1 = require("../modules/stats/stats.route");
 exports.router = (0, express_1.Router)();
 const moduleRoutes = [
     {
@@ -33,6 +34,10 @@ const moduleRoutes = [
     {
         path: "/payment",
         route: payment_route_1.paymentRoutes
+    },
+    {
+        path: "/stats",
+        route: stats_route_1.statsRoutes
     }
 ];
 moduleRoutes.forEach(route => exports.router.use(route.path, route.route));

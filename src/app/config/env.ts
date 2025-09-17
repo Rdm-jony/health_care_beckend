@@ -48,6 +48,7 @@ interface EnvConfig {
         SSL_FAIL_FRONTEND_URL: string,
         SSL_CANCEL_FRONTEND_URL: string
     },
+    MISTRAL_API_KEY: string
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -69,7 +70,7 @@ const loadEnvVariables = (): EnvConfig => {
         "REDIS_PORT",
         "SUPER_ADMIN_EMAIL",
         "SUPER_ADMIN_PASSWORD",
-        'SSL_STORE_ID', 'SSL_STORE_PASS', 'SSL_PAYMENT_API', 'SSL_VALIDATION_API', 'SSL_SUCCESS_BACKEND_URL', 'SSL_FAIL_BACKEND_URL', 'SSL_CANCEL_BACKEND_URL', 'SSL_SUCCESS_FRONTEND_URL', 'SSL_FAIL_FRONTEND_URL', 'SSL_CANCEL_FRONTEND_URL',
+        'SSL_STORE_ID', 'SSL_STORE_PASS', 'SSL_PAYMENT_API', 'SSL_VALIDATION_API', 'SSL_SUCCESS_BACKEND_URL', 'SSL_FAIL_BACKEND_URL', 'SSL_CANCEL_BACKEND_URL', 'SSL_SUCCESS_FRONTEND_URL', 'SSL_FAIL_FRONTEND_URL', 'SSL_CANCEL_FRONTEND_URL', "MISTRAL_API_KEY"
     ]
 
     requiredEnvVariables.forEach(key => {
@@ -125,6 +126,7 @@ const loadEnvVariables = (): EnvConfig => {
             SSL_FAIL_FRONTEND_URL: process.env.SSL_FAIL_FRONTEND_URL as string,
             SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL as string
         },
+        MISTRAL_API_KEY: process.env.MISTRAL_API_KEY as string
     }
 }
 

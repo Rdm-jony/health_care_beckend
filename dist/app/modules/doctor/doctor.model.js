@@ -5,6 +5,7 @@ const mongoose_1 = require("mongoose");
 const doctor_interface_1 = require("./doctor.interface");
 const specializationShema = new mongoose_1.Schema({
     name: { type: String, required: true, unique: true, trim: true },
+    image: { type: String }
 });
 exports.Specialization = (0, mongoose_1.model)("Specialization", specializationShema);
 const availableTimesSchema = new mongoose_1.Schema({

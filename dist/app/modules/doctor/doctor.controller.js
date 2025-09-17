@@ -18,7 +18,9 @@ const doctor_service_1 = require("./doctor.service");
 const sendResponse_1 = require("../../utils/sendResponse");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const addSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newSpecialize = yield doctor_service_1.doctorServices.addSpecialize(req.body);
+    var _a;
+    const payload = Object.assign({ image: (_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.path }, req.body);
+    const newSpecialize = yield doctor_service_1.doctorServices.addSpecialize(payload);
     (0, sendResponse_1.sendResponse)(res, {
         data: newSpecialize,
         message: "doctor specializaion create succesfully!",
@@ -27,8 +29,10 @@ const addSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
     });
 }));
 const updateSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const id = req.params.id;
-    const updatedSpecialization = yield doctor_service_1.doctorServices.updateSpecialize(id, req.body);
+    const payload = Object.assign({ image: (_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.path }, req.body);
+    const updatedSpecialization = yield doctor_service_1.doctorServices.updateSpecialize(id, payload);
     (0, sendResponse_1.sendResponse)(res, {
         data: updatedSpecialization,
         message: "specializaion update succesfully!",

@@ -33,6 +33,7 @@ const env_1 = require("../../config/env");
 const cloudinary_config_1 = require("../../config/cloudinary.config");
 const queryBuilder_1 = require("../../utils/queryBuilder");
 const doctor_model_1 = require("../doctor/doctor.model");
+const user_constants_1 = require("./user.constants");
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const email = payload.email;
     const isUserExists = yield user_model_1.User.findOne({ email });
@@ -81,9 +82,22 @@ const updateUser = (userId, payload, decodedToken) => __awaiter(void 0, void 0, 
     }
     return newUpdatedUser;
 });
-const getAllUser = () => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_model_1.User.find({});
-    return users;
+const getAllUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryBuilder = new queryBuilder_1.QueryBuilder(user_model_1.User.find(), query);
+    const users = queryBuilder
+        .search(user_constants_1.userSearchField)
+        .filter()
+        .sort()
+        .fields()
+        .paginate();
+    const [data, meta] = yield Promise.all([
+        users.build(),
+        queryBuilder.getMeta()
+    ]);
+    return {
+        data,
+        meta
+    };
 });
 const getSingleUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExists = yield user_model_1.User.findById(userId).select("-password");

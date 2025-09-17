@@ -32,6 +32,9 @@ const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0
         if (!isUserExist.isVerified) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "User is not verified");
         }
+        if (isUserExist.isBlocked) {
+            throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "User is blocked");
+        }
         if (isUserExist.isDeleted) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "User is deleted");
         }

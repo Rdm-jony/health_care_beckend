@@ -29,11 +29,13 @@ const createUser = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, 
     });
 }));
 const getAllUser = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_service_1.userService.getAllUser();
+    const query = req.query;
+    const user = yield user_service_1.userService.getAllUser(query);
     (0, sendResponse_1.sendResponse)(res, {
-        data: user,
+        data: user.data,
         message: "all user retrived successfully",
         statusCode: http_status_codes_1.default.OK,
+        meta: user === null || user === void 0 ? void 0 : user.meta,
         success: true
     });
 }));

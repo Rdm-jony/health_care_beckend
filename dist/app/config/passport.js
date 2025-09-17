@@ -36,6 +36,9 @@ passport_1.default.use(new passport_local_1.Strategy({
         if (!isUserExist.isVerified) {
             return done("User is not verified");
         }
+        if (isUserExist.isBlocked) {
+            return done("User is blocked");
+        }
         if (isUserExist.isDeleted) {
             return done("User is deleted");
         }
@@ -75,6 +78,9 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
         }
         if (!isUserExist.isVerified) {
             return done("User is not verified");
+        }
+        if (isUserExist.isBlocked) {
+            return done("User is blocked");
         }
         if (isUserExist.isDeleted) {
             return done("User is deleted");

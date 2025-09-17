@@ -19,6 +19,7 @@ const userSchema = new mongoose_1.Schema({
     gender: { type: String, enum: Object.values(user_interface_1.Gender) },
     isDeleted: { type: zod_1.boolean, default: false },
     isVerified: { type: zod_1.boolean, default: false },
+    isBlocked: { type: zod_1.boolean, default: false },
     phone: { type: String },
     picture: { type: String },
     permitToDoctor: { type: String, enum: Object.values(user_interface_1.DoctorRequest), default: user_interface_1.DoctorRequest.NONE },

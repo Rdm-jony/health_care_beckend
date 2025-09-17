@@ -35,7 +35,8 @@ const doctorSchema = new Schema<IDoctor>({
         type: Schema.Types.ObjectId,
         ref: "Specialization",
         required: true
-    }
+    },
+    embedding: { type: [Number], default: [] }
 }, {
     timestamps: true
 })

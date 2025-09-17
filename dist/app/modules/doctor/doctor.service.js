@@ -32,7 +32,7 @@ const addSpecialize = (payload) => __awaiter(void 0, void 0, void 0, function* (
     if (existingSpecialize) {
         throw new AppError_1.default(http_status_codes_2.default.BAD_REQUEST, "doctor specialization already exists.");
     }
-    yield doctor_model_1.Specialization.create({ name: payload.name.toLowerCase() });
+    yield doctor_model_1.Specialization.create({ name: payload.name.toLowerCase(), image: payload.image });
 });
 const updateSpecialize = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isSpecializeExist = yield doctor_model_1.Specialization.findById(id);
@@ -40,6 +40,9 @@ const updateSpecialize = (id, payload) => __awaiter(void 0, void 0, void 0, func
         throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "specialize not found!");
     }
     const updateSpecialize = yield doctor_model_1.Specialization.findByIdAndUpdate(id, payload, { new: true });
+    if (isSpecializeExist === null || isSpecializeExist === void 0 ? void 0 : isSpecializeExist.image) {
+        yield (0, cloudinary_config_1.deleteImageFromCloudinary)(isSpecializeExist.image);
+    }
     return updateSpecialize;
 });
 const getAllSpecialize = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,7 +116,7 @@ const updateDoctor = (doctorId, decodedToken, payload) => __awaiter(void 0, void
     if (payload.role && decodedToken.role === user_interface_1.Role.DOCTOR) {
         throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "You are not authorized");
     }
-    if ((payload.isDeleted || payload.isVerified) && decodedToken.role === user_interface_1.Role.DOCTOR) {
+    if ((payload.isDeleted || payload.isVerified || payload.isBlocked) && decodedToken.role === user_interface_1.Role.DOCTOR) {
         throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "You are not authorized");
     }
     // Separate user & doctor data

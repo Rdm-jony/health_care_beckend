@@ -15,6 +15,8 @@ import { Booking } from "../booking/booking.model";
 import { BOOKING_STATUS } from "../booking/booking.interface";
 import { generateSlots } from "../../utils/generateSlots";
 
+
+
 const addSpecialize = async (payload: ISpecialization) => {
     const existingSpecialize = await Specialization.findOne({ name: payload.name.toLowerCase() });
 
@@ -61,6 +63,7 @@ const addDoctor = async (payload: IDoctor) => {
         await User.findByIdAndUpdate(payload.user, { role: Role.DOCTOR, permitToDoctor: DoctorRequest.APPROVED })
         await session.commitTransaction();
         session.endSession();
+
         return doctor
     } catch (error: any) {
         await session.abortTransaction();

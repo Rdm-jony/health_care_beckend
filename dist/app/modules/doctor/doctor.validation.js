@@ -8,7 +8,7 @@ const zod_1 = require("zod");
 const mongoose_1 = __importDefault(require("mongoose"));
 const doctor_interface_1 = require("./doctor.interface");
 exports.specializationSchema = zod_1.z.object({
-    name: zod_1.z.string({ message: "name is required" }).min(1, "About must not be empty")
+    name: zod_1.z.string({ message: "name is required" }).min(1, "About must not be empty"),
 });
 // Slot schema
 const AvailableSlotSchema = zod_1.z

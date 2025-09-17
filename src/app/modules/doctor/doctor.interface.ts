@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 export interface ISpecialization {
     name: string,
-    image?:string
+    image?: string
 }
 
 export enum DayOfWeek {
@@ -27,5 +27,6 @@ export interface IDoctor {
     degree: string,
     experience: number,
     fees: number,
-    about: string
+    about: string,
+    embedding: number[]
 }
