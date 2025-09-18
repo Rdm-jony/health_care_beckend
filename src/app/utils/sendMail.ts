@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import nodemailer from "nodemailer"
-import { envVars } from "../config/env"
+import { envVars } from "../config/env.js"
 import path from "path"
 import ejs from "ejs";
-import AppError from "../errorHelpers/AppError";
+import AppError from "../errorHelpers/AppError.js";
 
 
 const transporter = nodemailer.createTransport({

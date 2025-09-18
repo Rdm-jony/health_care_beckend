@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import AppError from "../errorHelpers/AppError"
-import { verifyToken } from "../utils/jwt"
-import { envVars } from "../config/env"
-import { User } from "../modules/user/user.model"
+import AppError from "../errorHelpers/AppError.js"
+import { verifyToken } from "../utils/jwt.js"
+import { envVars } from "../config/env.js"
+import { User } from "../modules/user/user.model.js"
 import { JwtPayload } from "jsonwebtoken"
 import httpStatusCode from "http-status-codes"
 

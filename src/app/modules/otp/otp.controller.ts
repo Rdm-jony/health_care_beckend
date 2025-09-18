@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { otpSrvice } from "./otp.service";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { otpSrvice } from "./otp.service.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import httpStatusCode from "http-status-codes"
 
 const sendOtp = catchAsync(async (req: Request, res: Response) => {

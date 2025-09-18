@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { userService } from "./user.service";
-import { sendResponse } from "../../utils/sendResponse";
+import { userService } from "./user.service.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import httpStatusCode from "http-status-codes"
-import { catchAsync } from "../../utils/catchAsync";
+import { catchAsync } from "../../utils/catchAsync.js";
 import { JwtPayload } from "jsonwebtoken";
-import { IUser } from "./user.interface";
+import { IUser } from "./user.interface.js";
 
 
 

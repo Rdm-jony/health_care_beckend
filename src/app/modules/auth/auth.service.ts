@@ -1,13 +1,13 @@
 import { JwtPayload } from "jsonwebtoken"
-import { generateNewAccessTokenByRefreshToken } from "../../utils/createUsersToken"
-import { User } from "../user/user.model"
+import { generateNewAccessTokenByRefreshToken } from "../../utils/createUsersToken.js"
+import { User } from "../user/user.model.js"
 import bcrypt from "bcryptjs"
-import AppError from "../../errorHelpers/AppError"
+import AppError from "../../errorHelpers/AppError.js"
 import httpStatusCode from "http-status-codes"
-import { envVars } from "../../config/env"
-import { IAuthProvider } from "../user/user.interface"
-import { generateToken } from "../../utils/jwt"
-import { sendMail } from "../../utils/sendMail"
+import { envVars } from "../../config/env.js"
+import { IAuthProvider } from "../user/user.interface.js"
+import { generateToken } from "../../utils/jwt.js"
+import { sendMail } from "../../utils/sendMail.js"
 
 const getNewAccessToken = async (refreshToken: string) => {
     const accessToken = await generateNewAccessTokenByRefreshToken(refreshToken)

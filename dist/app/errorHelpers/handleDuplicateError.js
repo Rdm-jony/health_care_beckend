@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDuplicateError = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const handleDuplicateError = (err) => {
+export const handleDuplicateError = (err) => {
     const matchedArray = err.message.match(/"([^"]*)"/);
     if (matchedArray && matchedArray[1]) {
         return {
@@ -16,4 +13,3 @@ const handleDuplicateError = (err) => {
         message: "Duplicate field value already exists!"
     };
 };
-exports.handleDuplicateError = handleDuplicateError;

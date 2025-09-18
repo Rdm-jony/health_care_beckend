@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v2 as cloudinary } from 'cloudinary'
-import { envVars } from './env';
-import AppError from '../errorHelpers/AppError';
+import { envVars } from "./env.js";
+import AppError from "../errorHelpers/AppError.js";
 
 cloudinary.config({
     cloud_name: envVars.CLOUDINARY.CLOUDINARY_CLOUD_NAME,

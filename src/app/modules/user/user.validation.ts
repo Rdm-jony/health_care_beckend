@@ -1,5 +1,5 @@
 import z from "zod";
-import { DoctorRequest, Gender, Role } from "./user.interface";
+import { DoctorRequest, Gender, Role } from "./user.interface.js";
 
 export const createUserZodSchema = z.object({
     name: z.string()

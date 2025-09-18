@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { doctorServices } from "./doctor.service";
-import { sendResponse } from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { doctorServices } from "./doctor.service.js";
+import { sendResponse } from "../../utils/sendResponse.js";
 import httpStatusCode from "http-status-codes"
 import { JwtPayload } from "jsonwebtoken";
-import { IUser } from "../user/user.interface";
-import { IDoctor, ISpecialization } from "./doctor.interface";
+import { IUser } from "../user/user.interface.js";
+import { IDoctor, ISpecialization } from "./doctor.interface.js";
 
 
 const addSpecialize = catchAsync(async (req: Request, res: Response) => {

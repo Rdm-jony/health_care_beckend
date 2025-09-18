@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.doctorPopulatePath = exports.doctorSearChQueryFields = void 0;
-exports.doctorSearChQueryFields = ["user.name", "about", "specialization.name"];
-exports.doctorPopulatePath = [
+export const doctorSearChQueryFields = ["user.name", "about", "specialization.name"];
+export const doctorPopulatePath = [
     { path: "user", select: "name" },
     { path: "specialization", select: "name" }
 ];

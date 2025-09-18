@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Query } from "mongoose";
-import { excludeField } from "../constant/constant";
+import { excludeField } from "../constant/constant.js";
 
 export class QueryBuilder<T> {
     public modelQuery: Query<T[], T>;

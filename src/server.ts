@@ -1,10 +1,10 @@
 // getting-started.js
 import mongoose from "mongoose";
 import { Server } from "http"
-import app from "./app";
-import { envVars } from "./app/config/env";
-import { connectRedis } from "./app/config/redis.config";
-import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
+import app from "./app.js";
+import { envVars } from "./app/config/env.js";
+import { connectRedis } from "./app/config/redis.config.js";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin.js";
 
 let server: Server;
 

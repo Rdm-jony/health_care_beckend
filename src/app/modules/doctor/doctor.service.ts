@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import AppError from "../../errorHelpers/AppError";
-import { DoctorRequest, IUser, Role } from "../user/user.interface";
-import { User } from "../user/user.model";
-import { IDoctor, ISpecialization } from "./doctor.interface";
+import AppError from "../../errorHelpers/AppError.js";
+import { DoctorRequest, IUser, Role } from "../user/user.interface.js";
+import { User } from "../user/user.model.js";
+import { IDoctor, ISpecialization } from "./doctor.interface.js";
 import httpStatusCode from "http-status-codes"
-import { Doctor, Specialization } from "./doctor.model";
+import { Doctor, Specialization } from "./doctor.model.js";
 import { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
 import httpStausCode from "http-status-codes"
-import { doctorSearChQueryFields } from "./doctor.constant";
-import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder";
-import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
-import { Booking } from "../booking/booking.model";
-import { BOOKING_STATUS } from "../booking/booking.interface";
-import { generateSlots } from "../../utils/generateSlots";
+import { doctorSearChQueryFields } from "./doctor.constant.js";
+import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder.js";
+import { deleteImageFromCloudinary } from "../../config/cloudinary.config.js";
+import { Booking } from "../booking/booking.model.js";
+import { BOOKING_STATUS } from "../booking/booking.interface.js";
+import { generateSlots } from "../../utils/generateSlots.js";
 
 
 

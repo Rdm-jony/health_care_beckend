@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
-import AppError from "../../errorHelpers/AppError";
-import { Doctor } from "../doctor/doctor.model";
-import { User } from "../user/user.model";
-import { BOOKING_STATUS, IBooking } from "./booking.interface";
+import AppError from "../../errorHelpers/AppError.js";
+import { Doctor } from "../doctor/doctor.model.js";
+import { User } from "../user/user.model.js";
+import { BOOKING_STATUS, IBooking } from "./booking.interface.js";
 import httpStatusCode from "http-status-codes"
-import { Booking } from "./booking.model";
-import { Payment } from "../payement/payment.model";
-import { IUser, Role } from "../user/user.interface";
-import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder";
-import { bookingDoctorSearchField, bookingUserSearchField } from "./booking.constant";
-import { generateInvoiceBuffer, IInvoice } from "../../utils/invoice";
-import { ISpecialization } from "../doctor/doctor.interface";
-import { sendMail } from "../../utils/sendMail";
+import { Booking } from "./booking.model.js";
+import { Payment } from "../payement/payment.model.js";
+import { IUser, Role } from "../user/user.interface.js";
+import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder.js";
+import { bookingDoctorSearchField, bookingUserSearchField } from "./booking.constant.js";
+import { generateInvoiceBuffer, IInvoice } from "../../utils/invoice.js";
+import { ISpecialization } from "../doctor/doctor.interface.js";
+import { sendMail } from "../../utils/sendMail.js";
 
 const getTransactionId = () => {
     return `tran_${Date.now()}_${Math.random() * 1000}`

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateSlots = generateSlots;
-function generateSlots(startTime, endTime, slotDuration) {
+export function generateSlots(startTime, endTime, slotDuration) {
     const slots = [];
     const [sh, sm] = startTime.split(":").map(Number);
     const [eh, em] = endTime.split(":").map(Number);

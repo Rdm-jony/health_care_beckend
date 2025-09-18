@@ -1,31 +1,28 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = exports.authProvideSchema = void 0;
-const mongoose_1 = require("mongoose");
-const user_interface_1 = require("./user.interface");
-const zod_1 = require("zod");
-exports.authProvideSchema = new mongoose_1.Schema({
+import { model, Schema } from "mongoose";
+import { DoctorRequest, Gender, Role } from "./user.interface.js";
+import { boolean } from "zod";
+export const authProvideSchema = new Schema({
     provider: { type: String, required: true },
     providerId: { type: String, required: true }
 }, {
     versionKey: false,
     _id: false
 });
-const userSchema = new mongoose_1.Schema({
+const userSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String },
     address: { type: String },
-    gender: { type: String, enum: Object.values(user_interface_1.Gender) },
-    isDeleted: { type: zod_1.boolean, default: false },
-    isVerified: { type: zod_1.boolean, default: false },
-    isBlocked: { type: zod_1.boolean, default: false },
+    gender: { type: String, enum: Object.values(Gender) },
+    isDeleted: { type: boolean, default: false },
+    isVerified: { type: boolean, default: false },
+    isBlocked: { type: boolean, default: false },
     phone: { type: String },
     picture: { type: String },
-    permitToDoctor: { type: String, enum: Object.values(user_interface_1.DoctorRequest), default: user_interface_1.DoctorRequest.NONE },
-    role: { type: String, enum: Object.values(user_interface_1.Role), default: user_interface_1.Role.USER },
-    auth: [exports.authProvideSchema]
+    permitToDoctor: { type: String, enum: Object.values(DoctorRequest), default: DoctorRequest.NONE },
+    role: { type: String, enum: Object.values(Role), default: Role.USER },
+    auth: [authProvideSchema]
 }, {
     timestamps: true
 });
-exports.User = (0, mongoose_1.model)("User", userSchema);
+export const User = model("User", userSchema);

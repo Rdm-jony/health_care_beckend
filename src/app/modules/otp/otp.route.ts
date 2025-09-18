@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { otpController } from "./otp.controller";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { sendOtpSchema, verfyOtpSchema } from "./otpValidation";
+import { otpController } from "./otp.controller.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { sendOtpSchema, verfyOtpSchema } from "./otpValidation.js";
 
 const router = Router()
 

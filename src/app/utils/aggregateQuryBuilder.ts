@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import mongoose from "mongoose";
-import { excludeField } from "../constant/constant";
+import { excludeField } from "../constant/constant.js";
 
 export class AggregationQueryBuilder {
   private pipeline: any[] = [];

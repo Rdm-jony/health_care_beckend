@@ -1,6 +1,6 @@
 import { z } from "zod";
 import mongoose from "mongoose";
-import { DayOfWeek } from "./doctor.interface";
+import { DayOfWeek } from "./doctor.interface.js";
 
 export const specializationSchema = z.object({
     name: z.string({ message: "name is required" }).min(1, "About must not be empty"),

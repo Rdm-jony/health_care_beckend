@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { userRoutes } from "../modules/user/user.route";
-import { authRoutes } from "../modules/auth/auth.route";
-import { otpRoutes } from "../modules/otp/otp.route";
-import { doctorRoutes } from "../modules/doctor/doctor.route";
-import { bookingRoutes } from "../modules/booking/booking.route";
-import { paymentRoutes } from "../modules/payement/payment.route";
-import { statsRoutes } from "../modules/stats/stats.route";
-import { chatRoutes } from "../modules/chat/chat.route";
+import { userRoutes } from "../modules/user/user.route.js";
+import { authRoutes } from "../modules/auth/auth.route.js";
+import { otpRoutes } from "../modules/otp/otp.route.js";
+import { doctorRoutes } from "../modules/doctor/doctor.route.js";
+import { bookingRoutes } from "../modules/booking/booking.route.js";
+import { paymentRoutes } from "../modules/payement/payment.route.js";
+import { statsRoutes } from "../modules/stats/stats.route.js";
+import { chatRoutes } from "../modules/chat/chat.route.js";
 export const router = Router()
 const moduleRoutes = [
     {
@@ -38,8 +38,8 @@ const moduleRoutes = [
         route: statsRoutes
     },
     {
-        path: "/chat",
-        route: chatRoutes
+        path:"/chat",
+        route:chatRoutes
     }
 ]
 

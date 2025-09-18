@@ -3,11 +3,11 @@ import { addMessages, Annotation, MemorySaver, StateGraph } from "@langchain/lan
 import { ChatMistralAI, MistralAIEmbeddings } from "@langchain/mistralai";
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { v4 as uuidv4 } from "uuid";
-import { Doctor } from "../doctor/doctor.model";
-import { cosineSimilarity } from "../../utils/cosineSimilarity";
-import { IUser } from "../user/user.interface";
-import { ISpecialization } from "../doctor/doctor.interface";
-import AppError from "../../errorHelpers/AppError";
+import { Doctor } from "../doctor/doctor.model.js";
+import { cosineSimilarity } from "../../utils/cosineSimilarity.js";
+import { IUser } from "../user/user.interface.js";
+import { ISpecialization } from "../doctor/doctor.interface.js";
+import AppError from "../../errorHelpers/AppError.js";
 
 // Embedding model for semantic search
 const embeddings = new MistralAIEmbeddings();

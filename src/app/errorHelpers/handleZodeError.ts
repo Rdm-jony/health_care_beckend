@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TGenericErrorResponse } from "../interfaces/error.types";
+import { TGenericErrorResponse } from "../interfaces/error.types.js";
 
 export const handleZodError = (err: any): TGenericErrorResponse => {
     const errorSources: any = []

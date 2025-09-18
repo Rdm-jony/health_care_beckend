@@ -1,6 +1,6 @@
-import { Doctor, Specialization } from "../doctor/doctor.model";
-import { DoctorRequest, Role } from "../user/user.interface";
-import { User } from "../user/user.model";
+import { Doctor, Specialization } from "../doctor/doctor.model.js";
+import { DoctorRequest, Role } from "../user/user.interface.js";
+import { User } from "../user/user.model.js";
 
 const now = new Date();
 const sevenDaysAgo = new Date(now).setDate(now.getDate() - 7);

@@ -2,10 +2,10 @@
 import passport from "passport"
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
-import { User } from "../modules/user/user.model";
+import { User } from "../modules/user/user.model.js";
 import brcypt from "bcryptjs"
-import { envVars } from "./env";
-import { IAuthProvider } from "../modules/user/user.interface";
+import { envVars } from "./env.js";
+import { IAuthProvider } from "../modules/user/user.interface.js";
 
 // Local Strategy
 passport.use(

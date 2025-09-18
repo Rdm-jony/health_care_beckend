@@ -1,153 +1,138 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.bookingService = void 0;
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const mongoose_1 = __importDefault(require("mongoose"));
-const AppError_1 = __importDefault(require("../../errorHelpers/AppError"));
-const doctor_model_1 = require("../doctor/doctor.model");
-const user_model_1 = require("../user/user.model");
-const booking_interface_1 = require("./booking.interface");
-const http_status_codes_1 = __importDefault(require("http-status-codes"));
-const booking_model_1 = require("./booking.model");
-const payment_model_1 = require("../payement/payment.model");
-const user_interface_1 = require("../user/user.interface");
-const aggregateQuryBuilder_1 = require("../../utils/aggregateQuryBuilder");
-const booking_constant_1 = require("./booking.constant");
-const invoice_1 = require("../../utils/invoice");
-const sendMail_1 = require("../../utils/sendMail");
+import mongoose from "mongoose";
+import AppError from "../../errorHelpers/AppError.js";
+import { Doctor } from "../doctor/doctor.model.js";
+import { User } from "../user/user.model.js";
+import { BOOKING_STATUS } from "./booking.interface.js";
+import httpStatusCode from "http-status-codes";
+import { Booking } from "./booking.model.js";
+import { Payment } from "../payement/payment.model.js";
+import { Role } from "../user/user.interface.js";
+import { AggregationQueryBuilder } from "../../utils/aggregateQuryBuilder.js";
+import { bookingDoctorSearchField, bookingUserSearchField } from "./booking.constant.js";
+import { generateInvoiceBuffer } from "../../utils/invoice.js";
+import { sendMail } from "../../utils/sendMail.js";
 const getTransactionId = () => {
     return `tran_${Date.now()}_${Math.random() * 1000}`;
 };
-const createBooking = (userId, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_model_1.User.findById(userId);
-    if ((user === null || user === void 0 ? void 0 : user.role) !== user_interface_1.Role.USER) {
-        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Only a patient can book slot");
+const createBooking = async (userId, payload) => {
+    const user = await User.findById(userId);
+    if (user?.role !== Role.USER) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "Only a patient can book slot");
     }
-    if (!(user === null || user === void 0 ? void 0 : user.phone)) {
-        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "phone number is required. Update your profile");
+    if (!user?.phone) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "phone number is required. Update your profile");
     }
-    if (!(user === null || user === void 0 ? void 0 : user.address)) {
-        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "phone number is required. Update your profile");
+    if (!user?.address) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "phone number is required. Update your profile");
     }
-    const findDoctor = yield doctor_model_1.Doctor.findById(payload.doctor);
+    const findDoctor = await Doctor.findById(payload.doctor);
     if (!findDoctor) {
-        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "doctor not found");
+        throw new AppError(httpStatusCode.NOT_FOUND, "doctor not found");
     }
     if (!findDoctor.fees) {
-        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "doctor fees not found");
+        throw new AppError(httpStatusCode.NOT_FOUND, "doctor fees not found");
     }
-    const session = yield mongoose_1.default.startSession();
+    const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const newBooking = yield booking_model_1.Booking.create([Object.assign(Object.assign({}, payload), { user: userId })], { session });
-        const newPayment = yield payment_model_1.Payment.create([Object.assign(Object.assign({}, payload), { amount: findDoctor.fees, transactionId: getTransactionId(), booking: newBooking[0]._id })], { session });
-        yield booking_model_1.Booking.findByIdAndUpdate(newBooking[0]._id, {
+        const newBooking = await Booking.create([{ ...payload, user: userId, }], { session });
+        const newPayment = await Payment.create([{ ...payload, amount: findDoctor.fees, transactionId: getTransactionId(), booking: newBooking[0]._id }], { session });
+        await Booking.findByIdAndUpdate(newBooking[0]._id, {
             payment: newPayment[0]._id
         }, {
             new: true,
             runValidators: true,
             session
         });
-        yield session.commitTransaction();
+        await session.commitTransaction();
         session.endSession();
     }
     catch (error) {
-        yield session.abortTransaction();
+        await session.abortTransaction();
         session.endSession();
         throw error;
     }
-});
-const getUserBookings = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
-    const aggBuilder = new aggregateQuryBuilder_1.AggregationQueryBuilder(query);
+};
+const getUserBookings = async (userId, query) => {
+    const aggBuilder = new AggregationQueryBuilder(query);
     const pipeline = [
         {
             $match: {
-                user: new mongoose_1.default.Types.ObjectId(userId),
+                user: new mongoose.Types.ObjectId(userId),
             },
         },
         ...aggBuilder
             .lookup("doctor", "doctors")
             .lookup("doctor.user", "users")
             .filter()
-            .search(booking_constant_1.bookingDoctorSearchField)
+            .search(bookingDoctorSearchField)
             .sort()
             .fields()
             .paginate()
             .build(),
     ];
-    const data = yield booking_model_1.Booking.aggregate(pipeline);
-    const meta = yield aggBuilder.getMeta(doctor_model_1.Doctor);
+    const data = await Booking.aggregate(pipeline);
+    const meta = await aggBuilder.getMeta(Doctor);
     return {
         data,
         meta,
     };
-});
-const getAllDoctorBookings = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
-    const aggBuilder = new aggregateQuryBuilder_1.AggregationQueryBuilder(query);
+};
+const getAllDoctorBookings = async (userId, query) => {
+    const aggBuilder = new AggregationQueryBuilder(query);
     const pipeline = aggBuilder
         .lookup("user", "users")
         .filter()
-        .search(booking_constant_1.bookingUserSearchField) // searching nested fields
+        .search(bookingUserSearchField) // searching nested fields
         .sort()
         .fields()
         .paginate()
         .build();
-    const data = yield booking_model_1.Booking.aggregate(pipeline);
-    const meta = yield aggBuilder.getMeta(doctor_model_1.Doctor);
+    const data = await Booking.aggregate(pipeline);
+    const meta = await aggBuilder.getMeta(Doctor);
     return {
         data,
         meta,
     };
-});
-const cashBooking = (bookingId) => __awaiter(void 0, void 0, void 0, function* () {
-    const findBooking = yield booking_model_1.Booking.findById(bookingId);
+};
+const cashBooking = async (bookingId) => {
+    const findBooking = await Booking.findById(bookingId);
     if (!findBooking) {
-        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "booking not found");
+        throw new AppError(httpStatusCode.NOT_FOUND, "booking not found");
     }
-    if (findBooking.status !== booking_interface_1.BOOKING_STATUS.PENDING) {
-        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "this route working on pending booking");
+    if (findBooking.status !== BOOKING_STATUS.PENDING) {
+        throw new AppError(httpStatusCode.BAD_REQUEST, "this route working on pending booking");
     }
-    const session = yield mongoose_1.default.startSession();
+    const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        findBooking.status = booking_interface_1.BOOKING_STATUS.CASH;
+        findBooking.status = BOOKING_STATUS.CASH;
         findBooking.payment = null;
-        yield findBooking.save({ session });
-        yield payment_model_1.Payment.findOneAndDelete({ booking: bookingId }, { session });
-        const user = yield user_model_1.User.findById(findBooking.user);
+        await findBooking.save({ session });
+        await Payment.findOneAndDelete({ booking: bookingId }, { session });
+        const user = await User.findById(findBooking.user);
         if (!user) {
-            throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "user not found");
+            throw new AppError(httpStatusCode.NOT_FOUND, "user not found");
         }
-        const doctor = yield doctor_model_1.Doctor.findById(findBooking.doctor).populate("user").populate("specialization");
+        const doctor = await Doctor.findById(findBooking.doctor).populate("user").populate("specialization");
         if (!doctor) {
-            throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "doctor not found");
+            throw new AppError(httpStatusCode.NOT_FOUND, "doctor not found");
         }
         const invoiceData = {
-            customerEmail: user === null || user === void 0 ? void 0 : user.email,
+            customerEmail: user?.email,
             customerName: user.name,
             date: findBooking.bookingDate,
             startTime: findBooking.startTime,
             endTime: findBooking.endTime,
-            total: doctor === null || doctor === void 0 ? void 0 : doctor.fees,
+            total: doctor?.fees,
             specialization: doctor.specialization.name,
             paymentType: "Cash",
             doctorName: doctor.user.name,
             transactionId: null // Add this line
         };
-        const pdfBuffer = yield (0, invoice_1.generateInvoiceBuffer)(invoiceData);
-        yield (0, sendMail_1.sendMail)({
+        const pdfBuffer = await generateInvoiceBuffer(invoiceData);
+        await sendMail({
             subject: "Download your booking invoice",
             templateData: invoiceData,
             templateName: "invoice",
@@ -160,17 +145,17 @@ const cashBooking = (bookingId) => __awaiter(void 0, void 0, void 0, function* (
                 }
             ]
         });
-        yield session.commitTransaction();
+        await session.commitTransaction();
         session.endSession();
         return;
     }
     catch (error) {
-        yield session.abortTransaction();
+        await session.abortTransaction();
         session.endSession();
         throw error;
     }
-});
-exports.bookingService = {
+};
+export const bookingService = {
     createBooking,
     getUserBookings,
     getAllDoctorBookings,

@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { DayOfWeek, IAvailableSlot, IDoctor, ISpecialization } from "./doctor.interface";
+import { DayOfWeek, IAvailableSlot, IDoctor, ISpecialization } from "./doctor.interface.js";
 
 const specializationShema = new Schema<ISpecialization>({
     name: { type: String, required: true, unique: true, trim: true },

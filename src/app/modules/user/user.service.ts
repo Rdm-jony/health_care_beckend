@@ -1,14 +1,14 @@
-import AppError from "../../errorHelpers/AppError";
-import { DoctorRequest, IAuthProvider, IUser, Role } from "./user.interface";
-import { User } from "./user.model";
+import AppError from "../../errorHelpers/AppError.js";
+import { DoctorRequest, IAuthProvider, IUser, Role } from "./user.interface.js";
+import { User } from "./user.model.js";
 import httpStatusCode from "http-status-codes"
 import bcrypt from "bcryptjs"
-import { envVars } from "../../config/env";
+import { envVars } from "../../config/env.js";
 import { JwtPayload } from "jsonwebtoken";
-import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
-import { QueryBuilder } from "../../utils/queryBuilder";
-import { Doctor, Specialization } from "../doctor/doctor.model";
-import { userSearchField } from "./user.constants";
+import { deleteImageFromCloudinary } from "../../config/cloudinary.config.js";
+import { QueryBuilder } from "../../utils/queryBuilder.js";
+import { Doctor, Specialization } from "../doctor/doctor.model.js";
+import { userSearchField } from "./user.constants.js";
 
 const createUser = async (payload: Partial<IUser>) => {
     const email = payload.email

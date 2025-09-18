@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
-import { catchAsync } from "../../utils/catchAsync"
-import { chatService } from "./chat.service"
-import { sendResponse } from "../../utils/sendResponse"
+import { catchAsync } from "../../utils/catchAsync.js"
+import { chatService } from "./chat.service.js"
+import { sendResponse } from "../../utils/sendResponse.js"
 import httpStatusCode from "http-status-codes"
 
 const conversation = catchAsync(async (req: Request, res: Response) => {

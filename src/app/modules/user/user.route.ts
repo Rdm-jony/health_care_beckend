@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { userController } from "./user.controller";
-import { createUserZodSchema, updateUserUserZodSchema } from "./user.validation";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "./user.interface";
-import { multerUpload } from "../../config/multer.config";
+import { userController } from "./user.controller.js";
+import { createUserZodSchema, updateUserUserZodSchema } from "./user.validation.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { Role } from "./user.interface.js";
+import { multerUpload } from "../../config/multer.config.js";
 
 const router = Router()
 

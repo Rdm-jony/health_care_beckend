@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
+import { catchAsync } from "../../utils/catchAsync.js";
 import passport from "passport";
-import { IUser } from "../user/user.interface";
-import AppError from "../../errorHelpers/AppError";
+import { IUser } from "../user/user.interface.js";
+import AppError from "../../errorHelpers/AppError.js";
 import httpStatusCode from "http-status-codes"
-import { sendResponse } from "../../utils/sendResponse";
-import { setAuthCookie } from "../../utils/setAuthCookie";
-import { createUsersToken } from "../../utils/createUsersToken";
-import { authService } from "./auth.service";
-import { envVars } from "../../config/env";
+import { sendResponse } from "../../utils/sendResponse.js";
+import { setAuthCookie } from "../../utils/setAuthCookie.js";
+import { createUsersToken } from "../../utils/createUsersToken.js";
+import { authService } from "./auth.service.js";
+import { envVars } from "../../config/env.js";
 import { JwtPayload } from "jsonwebtoken";
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

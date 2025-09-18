@@ -1,9 +1,9 @@
-import AppError from "../../errorHelpers/AppError"
-import { User } from "../user/user.model"
+import AppError from "../../errorHelpers/AppError.js"
+import { User } from "../user/user.model.js"
 import httpStatusCode from "http-status-codes"
-import { redisClient } from "../../config/redis.config"
-import { generateOtp } from "../../utils/generateOtp"
-import { sendMail } from "../../utils/sendMail"
+import { redisClient } from "../../config/redis.config.js"
+import { generateOtp } from "../../utils/generateOtp.js"
+import { sendMail } from "../../utils/sendMail.js"
 
 
 

@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { DoctorRequest, Gender, IAuthProvider, IUser, Role } from "./user.interface";
+import { DoctorRequest, Gender, IAuthProvider, IUser, Role } from "./user.interface.js";
 import { boolean } from "zod";
 
 export const authProvideSchema = new Schema<IAuthProvider>({

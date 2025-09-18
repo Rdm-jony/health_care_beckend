@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync";
-import { sendResponse } from "../../utils/sendResponse";
-import { StatsService } from "./stats.service";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { sendResponse } from "../../utils/sendResponse.js";
+import { StatsService } from "./stats.service.js";
 
 const getUserStats = catchAsync(async (req: Request, res: Response) => {
     const stats = await StatsService.getUserStats();

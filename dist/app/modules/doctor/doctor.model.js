@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Doctor = exports.Specialization = void 0;
-const mongoose_1 = require("mongoose");
-const doctor_interface_1 = require("./doctor.interface");
-const specializationShema = new mongoose_1.Schema({
+import { model, Schema } from "mongoose";
+import { DayOfWeek } from "./doctor.interface.js";
+const specializationShema = new Schema({
     name: { type: String, required: true, unique: true, trim: true },
     image: { type: String }
 });
-exports.Specialization = (0, mongoose_1.model)("Specialization", specializationShema);
-const availableTimesSchema = new mongoose_1.Schema({
-    day: { type: String, enum: Object.values(doctor_interface_1.DayOfWeek), required: true },
+export const Specialization = model("Specialization", specializationShema);
+const availableTimesSchema = new Schema({
+    day: { type: String, enum: Object.values(DayOfWeek), required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     slotDuration: { type: Number, required: true }
@@ -18,9 +15,9 @@ const availableTimesSchema = new mongoose_1.Schema({
     _id: false,
     versionKey: false
 });
-const doctorSchema = new mongoose_1.Schema({
+const doctorSchema = new Schema({
     user: {
-        type: mongoose_1.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
@@ -31,11 +28,12 @@ const doctorSchema = new mongoose_1.Schema({
     fees: { type: Number, required: true },
     licenceNumber: { type: String, required: true },
     specialization: {
-        type: mongoose_1.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Specialization",
         required: true
-    }
+    },
+    embedding: { type: [Number], default: [] }
 }, {
     timestamps: true
 });
-exports.Doctor = (0, mongoose_1.model)("Doctor", doctorSchema);
+export const Doctor = model("Doctor", doctorSchema);

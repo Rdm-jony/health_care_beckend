@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleZodError = void 0;
-const handleZodError = (err) => {
+export const handleZodError = (err) => {
     const errorSources = [];
     err.issues.forEach((issue) => {
         errorSources.push({
@@ -17,4 +14,3 @@ const handleZodError = (err) => {
         statusCode: 400
     };
 };
-exports.handleZodError = handleZodError;

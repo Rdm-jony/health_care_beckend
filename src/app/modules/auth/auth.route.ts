@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { authController } from "./auth.controller";
+import { authController } from "./auth.controller.js";
 import passport from "passport";
-import { envVars } from "../../config/env";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interface";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { changePasswordShema, forgetPasswordSchema, loginShema, resetPasswordSchema, setPasswordShema } from "./auth.validation";
+import { envVars } from "../../config/env.js";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { Role } from "../user/user.interface.js";
+import { validateRequest } from "../../middlewares/validateRequest.js";
+import { changePasswordShema, forgetPasswordSchema, loginShema, resetPasswordSchema, setPasswordShema } from "./auth.validation.js";
 
 const router = Router()
 

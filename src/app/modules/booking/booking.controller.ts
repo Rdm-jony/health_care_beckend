@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
-import { catchAsync } from "../../utils/catchAsync"
-import { bookingService } from "./booking.service"
+import { catchAsync } from "../../utils/catchAsync.js"
+import { bookingService } from "./booking.service.js"
 import { JwtPayload } from "jsonwebtoken"
 import httpStatusCode from "http-status-codes"
-import { sendResponse } from "../../utils/sendResponse"
+import { sendResponse } from "../../utils/sendResponse.js"
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
     const decodedToken = req?.user as JwtPayload

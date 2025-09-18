@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from 'redis';
-import { envVars } from './env';
+import { envVars } from "./env.js";
 
 export const redisClient = createClient({
     username: envVars.REDIS.REDIS_USERNAME,

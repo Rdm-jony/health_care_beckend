@@ -1,43 +1,40 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.router = void 0;
-const express_1 = require("express");
-const user_route_1 = require("../modules/user/user.route");
-const auth_route_1 = require("../modules/auth/auth.route");
-const otp_route_1 = require("../modules/otp/otp.route");
-const doctor_route_1 = require("../modules/doctor/doctor.route");
-const booking_route_1 = require("../modules/booking/booking.route");
-const payment_route_1 = require("../modules/payement/payment.route");
-const stats_route_1 = require("../modules/stats/stats.route");
-exports.router = (0, express_1.Router)();
+import { Router } from "express";
+import { userRoutes } from "../modules/user/user.route.js";
+import { authRoutes } from "../modules/auth/auth.route.js";
+import { otpRoutes } from "../modules/otp/otp.route.js";
+import { doctorRoutes } from "../modules/doctor/doctor.route.js";
+import { bookingRoutes } from "../modules/booking/booking.route.js";
+import { paymentRoutes } from "../modules/payement/payment.route.js";
+import { statsRoutes } from "../modules/stats/stats.route.js";
+export const router = Router();
 const moduleRoutes = [
     {
         path: "/user",
-        route: user_route_1.userRoutes
+        route: userRoutes
     },
     {
         path: "/auth",
-        route: auth_route_1.authRoutes
+        route: authRoutes
     },
     {
         path: "/otp",
-        route: otp_route_1.otpRoutes
+        route: otpRoutes
     },
     {
         path: "/doctor",
-        route: doctor_route_1.doctorRoutes
+        route: doctorRoutes
     },
     {
         path: "/booking",
-        route: booking_route_1.bookingRoutes
+        route: bookingRoutes
     },
     {
         path: "/payment",
-        route: payment_route_1.paymentRoutes
+        route: paymentRoutes
     },
     {
         path: "/stats",
-        route: stats_route_1.statsRoutes
+        route: statsRoutes
     }
 ];
-moduleRoutes.forEach(route => exports.router.use(route.path, route.route));
+moduleRoutes.forEach(route => router.use(route.path, route.route));

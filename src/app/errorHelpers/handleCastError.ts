@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import mongoose from "mongoose";
-import { TGenericErrorResponse } from "../interfaces/error.types";
+import { TGenericErrorResponse } from "../interfaces/error.types.js";
 
 export const hendleCastError = (err: mongoose.Error.CastError): TGenericErrorResponse => {
     return {

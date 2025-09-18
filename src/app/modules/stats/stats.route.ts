@@ -1,7 +1,7 @@
 import express from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interface";
-import { StatsController } from "./stats.controller";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { Role } from "../user/user.interface.js";
+import { StatsController } from "./stats.controller.js";
 
 const router = express.Router();
 

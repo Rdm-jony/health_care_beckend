@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { BOOKING_STATUS, IBooking } from "./booking.interface";
+import { BOOKING_STATUS, IBooking } from "./booking.interface.js";
 
 const bookingSchema = new Schema<IBooking>({
     doctor: { type: Schema.Types.ObjectId, required: true, ref: "Doctor" },

@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
-import { router } from "./app/routes";
-import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+import { globalErrorHandler } from "./app/middlewares/globalErrorHandler.js";
 import passport from "passport";
-import { envVars } from "./app/config/env";
-import './app/config/passport';
+import { envVars } from "./app/config/env.js";
+import './app/config/passport.js';
 import cookieParser from "cookie-parser";
 import cors from "cors"
-import notFound from "./app/middlewares/notFound";
+import notFound from "./app/middlewares/notFound.js";
+import { router } from "./app/routes/index.js";
 const app = express()
 
 app.use(express.json())

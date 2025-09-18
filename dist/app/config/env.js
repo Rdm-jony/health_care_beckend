@@ -1,11 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.envVars = void 0;
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+import dotenv from "dotenv";
+dotenv.config();
 const loadEnvVariables = () => {
     const requiredEnvVariables = ['DB_URL', 'PORT', 'NODE_ENV', 'BCRYPT_SALT', 'JWT_ACCESS_TOKEN_SECRET',
         'JWT_ACCESS_TOKEN_EXPIRESIN', "JWT_REFRESH_TOKEN_SECRET",
@@ -25,7 +19,7 @@ const loadEnvVariables = () => {
         "REDIS_PORT",
         "SUPER_ADMIN_EMAIL",
         "SUPER_ADMIN_PASSWORD",
-        'SSL_STORE_ID', 'SSL_STORE_PASS', 'SSL_PAYMENT_API', 'SSL_VALIDATION_API', 'SSL_SUCCESS_BACKEND_URL', 'SSL_FAIL_BACKEND_URL', 'SSL_CANCEL_BACKEND_URL', 'SSL_SUCCESS_FRONTEND_URL', 'SSL_FAIL_FRONTEND_URL', 'SSL_CANCEL_FRONTEND_URL',
+        'SSL_STORE_ID', 'SSL_STORE_PASS', 'SSL_PAYMENT_API', 'SSL_VALIDATION_API', 'SSL_SUCCESS_BACKEND_URL', 'SSL_FAIL_BACKEND_URL', 'SSL_CANCEL_BACKEND_URL', 'SSL_SUCCESS_FRONTEND_URL', 'SSL_FAIL_FRONTEND_URL', 'SSL_CANCEL_FRONTEND_URL', "MISTRAL_API_KEY"
     ];
     requiredEnvVariables.forEach(key => {
         if (!process.env[key]) {
@@ -78,6 +72,7 @@ const loadEnvVariables = () => {
             SSL_FAIL_FRONTEND_URL: process.env.SSL_FAIL_FRONTEND_URL,
             SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL
         },
+        MISTRAL_API_KEY: process.env.MISTRAL_API_KEY
     };
 };
-exports.envVars = loadEnvVariables();
+export const envVars = loadEnvVariables();

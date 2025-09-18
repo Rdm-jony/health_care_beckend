@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interface";
-import { paymentController } from "./payment.controller";
+import { checkAuth } from "../../middlewares/checkAuth.js";
+import { Role } from "../user/user.interface.js";
+import { paymentController } from "./payment.controller.js";
 
 const router = Router()
 router.post("/init/:bookingId", checkAuth(Role.USER), paymentController.initPayment)

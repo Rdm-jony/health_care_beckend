@@ -1,19 +1,13 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserUserZodSchema = exports.createUserZodSchema = void 0;
-const zod_1 = __importDefault(require("zod"));
-const user_interface_1 = require("./user.interface");
-exports.createUserZodSchema = zod_1.default.object({
-    name: zod_1.default.string()
+import z from "zod";
+import { DoctorRequest, Gender, Role } from "./user.interface.js";
+export const createUserZodSchema = z.object({
+    name: z.string()
         .min(2, { message: "Name must be at least 2 characters long." })
         .max(50, { message: "Name cannot exceed 50 characters." }).nonempty("required"),
-    email: zod_1.default.string("not a string").email({ message: "Invalid email address format." })
+    email: z.string("not a string").email({ message: "Invalid email address format." })
         .min(5, { message: "Email must be at least 5 characters long." })
         .max(100, { message: "Email cannot exceed 100 characters." }).nonempty("required"),
-    password: zod_1.default.string()
+    password: z.string()
         .min(8, { message: "Password must be at least 8 characters long." })
         .regex(/^(?=.*[A-Z])/, {
         message: "Password must contain at least 1 uppercase letter.",
@@ -24,35 +18,35 @@ exports.createUserZodSchema = zod_1.default.object({
         .regex(/^(?=.*\d)/, {
         message: "Password must contain at least 1 number.",
     }).nonempty("required"),
-    phone: zod_1.default
+    phone: z
         .string()
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
         message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }).optional(),
-    permitToDoctor: zod_1.default.enum(Object.values(user_interface_1.DoctorRequest)).default(user_interface_1.DoctorRequest.NONE),
-    gender: zod_1.default.enum(Object.values(user_interface_1.Gender)).optional(),
-    address: zod_1.default
+    permitToDoctor: z.enum(Object.values(DoctorRequest)).default(DoctorRequest.NONE),
+    gender: z.enum(Object.values(Gender)).optional(),
+    address: z
         .string()
         .max(200, { message: "Address cannot exceed 200 characters." }).optional()
 });
-exports.updateUserUserZodSchema = zod_1.default.object({
-    name: zod_1.default.string("not a string")
+export const updateUserUserZodSchema = z.object({
+    name: z.string("not a string")
         .min(2, { message: "Name must be at least 2 characters long." })
         .max(50, { message: "Name cannot exceed 50 characters." }),
-    phone: zod_1.default
+    phone: z
         .string()
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
         message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     })
         .optional(),
-    gender: zod_1.default.enum(Object.values(user_interface_1.Gender)).optional(),
-    address: zod_1.default
+    gender: z.enum(Object.values(Gender)).optional(),
+    address: z
         .string("Not a string")
         .max(200, { message: "Address cannot exceed 200 characters." })
         .optional(),
-    role: zod_1.default.enum(Object.values(user_interface_1.Role)).optional(),
-    isVerified: zod_1.default.boolean("isVerified must be true or false").optional(),
-    isDeleted: zod_1.default
+    role: z.enum(Object.values(Role)).optional(),
+    isVerified: z.boolean("isVerified must be true or false").optional(),
+    isDeleted: z
         .boolean("isDeleted must be true or false")
         .optional()
 });

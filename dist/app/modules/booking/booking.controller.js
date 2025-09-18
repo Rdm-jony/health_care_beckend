@@ -1,66 +1,51 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.bookingController = void 0;
-const catchAsync_1 = require("../../utils/catchAsync");
-const booking_service_1 = require("./booking.service");
-const http_status_codes_1 = __importDefault(require("http-status-codes"));
-const sendResponse_1 = require("../../utils/sendResponse");
-const createBooking = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const decodedToken = req === null || req === void 0 ? void 0 : req.user;
+import { catchAsync } from "../../utils/catchAsync.js";
+import { bookingService } from "./booking.service.js";
+import httpStatusCode from "http-status-codes";
+import { sendResponse } from "../../utils/sendResponse.js";
+const createBooking = catchAsync(async (req, res) => {
+    const decodedToken = req?.user;
     const payload = req.body;
-    yield booking_service_1.bookingService.createBooking(decodedToken.userId, payload);
-    (0, sendResponse_1.sendResponse)(res, {
+    await bookingService.createBooking(decodedToken.userId, payload);
+    sendResponse(res, {
         data: null,
         message: "Booking a slot successfully",
-        statusCode: http_status_codes_1.default.CREATED,
+        statusCode: httpStatusCode.CREATED,
         success: true
     });
-}));
-const getUserBookings = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const decodedToken = req === null || req === void 0 ? void 0 : req.user;
+});
+const getUserBookings = catchAsync(async (req, res) => {
+    const decodedToken = req?.user;
     const query = req.query;
-    const bookings = yield booking_service_1.bookingService.getUserBookings(decodedToken.userId, query);
-    (0, sendResponse_1.sendResponse)(res, {
+    const bookings = await bookingService.getUserBookings(decodedToken.userId, query);
+    sendResponse(res, {
         data: bookings.data,
         message: "users Bookings successfully",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const getAllDoctorBookings = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const decodedToken = req === null || req === void 0 ? void 0 : req.user;
+});
+const getAllDoctorBookings = catchAsync(async (req, res) => {
+    const decodedToken = req?.user;
     const query = req.query;
-    const bookings = yield booking_service_1.bookingService.getAllDoctorBookings(decodedToken.userId, query);
-    (0, sendResponse_1.sendResponse)(res, {
+    const bookings = await bookingService.getAllDoctorBookings(decodedToken.userId, query);
+    sendResponse(res, {
         data: bookings.data,
         message: "doctor Bookings retrive successfully",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const cashBooking = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+const cashBooking = catchAsync(async (req, res) => {
     const bookingId = req.params.id;
-    yield booking_service_1.bookingService.cashBooking(bookingId);
-    (0, sendResponse_1.sendResponse)(res, {
+    await bookingService.cashBooking(bookingId);
+    sendResponse(res, {
         data: null,
         message: "Bookings successfull.please check your email",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-exports.bookingController = {
+});
+export const bookingController = {
     createBooking,
     getUserBookings,
     getAllDoctorBookings,

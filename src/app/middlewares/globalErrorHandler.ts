@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express"
-import AppError from "../errorHelpers/AppError"
-import { envVars } from "../config/env"
-import { handleZodError } from "../errorHelpers/handleZodeError"
-import { TErrorSources } from "../interfaces/error.types"
-import { hendleCastError } from "../errorHelpers/handleCastError"
-import { handleDuplicateError } from "../errorHelpers/handleDuplicateError"
-import { handlerValidationError } from "../errorHelpers/handleValidationError"
-import { deleteImageFromCloudinary } from "../config/cloudinary.config"
+import AppError from "../errorHelpers/AppError.js"
+import { envVars } from "../config/env.js"
+import { handleZodError } from "../errorHelpers/handleZodeError.js"
+import { TErrorSources } from "../interfaces/error.types.js"
+import { hendleCastError } from "../errorHelpers/handleCastError.js"
+import { handleDuplicateError } from "../errorHelpers/handleDuplicateError.js"
+import { handlerValidationError } from "../errorHelpers/handleValidationError.js"
+import { deleteImageFromCloudinary } from "../config/cloudinary.config.js"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const globalErrorHandler =async (err: any, req: Request, res: Response, next: NextFunction) => {

@@ -1,119 +1,110 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.doctorControllers = void 0;
-const catchAsync_1 = require("../../utils/catchAsync");
-const doctor_service_1 = require("./doctor.service");
-const sendResponse_1 = require("../../utils/sendResponse");
-const http_status_codes_1 = __importDefault(require("http-status-codes"));
-const addSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const payload = Object.assign({ image: (_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.path }, req.body);
-    const newSpecialize = yield doctor_service_1.doctorServices.addSpecialize(payload);
-    (0, sendResponse_1.sendResponse)(res, {
+import { catchAsync } from "../../utils/catchAsync.js";
+import { doctorServices } from "./doctor.service.js";
+import { sendResponse } from "../../utils/sendResponse.js";
+import httpStatusCode from "http-status-codes";
+const addSpecialize = catchAsync(async (req, res) => {
+    const payload = {
+        image: req?.file?.path,
+        ...req.body
+    };
+    const newSpecialize = await doctorServices.addSpecialize(payload);
+    sendResponse(res, {
         data: newSpecialize,
         message: "doctor specializaion create succesfully!",
-        statusCode: http_status_codes_1.default.CREATED,
+        statusCode: httpStatusCode.CREATED,
         success: true
     });
-}));
-const updateSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+});
+const updateSpecialize = catchAsync(async (req, res) => {
     const id = req.params.id;
-    const payload = Object.assign({ image: (_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.path }, req.body);
-    const updatedSpecialization = yield doctor_service_1.doctorServices.updateSpecialize(id, payload);
-    (0, sendResponse_1.sendResponse)(res, {
+    const payload = {
+        image: req?.file?.path,
+        ...req.body
+    };
+    const updatedSpecialization = await doctorServices.updateSpecialize(id, payload);
+    sendResponse(res, {
         data: updatedSpecialization,
         message: "specializaion update succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const getAllSpecialize = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const allSpecialize = yield doctor_service_1.doctorServices.getAllSpecialize();
-    (0, sendResponse_1.sendResponse)(res, {
+});
+const getAllSpecialize = catchAsync(async (req, res) => {
+    const allSpecialize = await doctorServices.getAllSpecialize();
+    sendResponse(res, {
         data: allSpecialize,
         message: "allSpecialize retrived succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const addDoctor = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newDoctor = yield doctor_service_1.doctorServices.addDoctor(req.body);
-    (0, sendResponse_1.sendResponse)(res, {
+});
+const addDoctor = catchAsync(async (req, res) => {
+    const newDoctor = await doctorServices.addDoctor(req.body);
+    sendResponse(res, {
         data: newDoctor,
         message: "doctor create succesfully!",
-        statusCode: http_status_codes_1.default.CREATED,
+        statusCode: httpStatusCode.CREATED,
         success: true
     });
-}));
-const rejectRequest = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+const rejectRequest = catchAsync(async (req, res) => {
     const userId = req.params.id;
-    yield doctor_service_1.doctorServices.rejectRequest(userId);
-    (0, sendResponse_1.sendResponse)(res, {
+    await doctorServices.rejectRequest(userId);
+    sendResponse(res, {
         data: null,
         message: "permit To doctor reject!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const getAllDoctors = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+const getAllDoctors = catchAsync(async (req, res) => {
     const query = req.query;
-    const allDoctors = yield doctor_service_1.doctorServices.getAllDoctors(query);
-    (0, sendResponse_1.sendResponse)(res, {
+    const allDoctors = await doctorServices.getAllDoctors(query);
+    sendResponse(res, {
         data: allDoctors.data,
         message: "all doctor retrieved succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true,
         meta: allDoctors.meta
     });
-}));
-const getSingleDoctor = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+const getSingleDoctor = catchAsync(async (req, res) => {
     const id = req.params.id;
-    const doctor = yield doctor_service_1.doctorServices.getSingleDoctor(id);
-    (0, sendResponse_1.sendResponse)(res, {
+    const doctor = await doctorServices.getSingleDoctor(id);
+    sendResponse(res, {
         data: doctor,
         message: "single doctor retrieved succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true,
     });
-}));
-const updateDoctor = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+});
+const updateDoctor = catchAsync(async (req, res) => {
     const doctorId = req.params.id;
     const decodedToken = req.user;
-    const payload = Object.assign({ picture: (_a = req === null || req === void 0 ? void 0 : req.file) === null || _a === void 0 ? void 0 : _a.path }, req.body);
-    const updatedDoctor = yield doctor_service_1.doctorServices.updateDoctor(doctorId, decodedToken, payload);
-    (0, sendResponse_1.sendResponse)(res, {
+    const payload = {
+        picture: req?.file?.path,
+        ...req.body
+    };
+    const updatedDoctor = await doctorServices.updateDoctor(doctorId, decodedToken, payload);
+    sendResponse(res, {
         data: updatedDoctor,
         message: "doctor update succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-const getAvailableSlots = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+const getAvailableSlots = catchAsync(async (req, res) => {
     const doctorId = req.params.id;
     const date = req.query.date;
-    const slots = yield doctor_service_1.doctorServices.getAvailableSlots(doctorId, date);
-    (0, sendResponse_1.sendResponse)(res, {
+    const slots = await doctorServices.getAvailableSlots(doctorId, date);
+    sendResponse(res, {
         data: slots,
         message: "doctor slot retrive succesfully!",
-        statusCode: http_status_codes_1.default.OK,
+        statusCode: httpStatusCode.OK,
         success: true
     });
-}));
-exports.doctorControllers = {
+});
+export const doctorControllers = {
     addDoctor,
     addSpecialize,
     updateSpecialize,

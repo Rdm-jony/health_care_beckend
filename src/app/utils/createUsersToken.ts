@@ -1,9 +1,9 @@
-import { envVars } from "../config/env"
-import { IUser } from "../modules/user/user.interface"
+import { envVars } from "../config/env.js"
+import { IUser } from "../modules/user/user.interface.js"
 import httpStatusCode from "http-status-codes"
-import { generateToken, verifyToken } from "./jwt"
-import { User } from "../modules/user/user.model"
-import AppError from "../errorHelpers/AppError"
+import { generateToken, verifyToken } from "./jwt.js"
+import { User } from "../modules/user/user.model.js"
+import AppError from "../errorHelpers/AppError.js"
 import { JwtPayload } from "jsonwebtoken"
 
 export const createUsersToken = (user: Partial<IUser>) => {
