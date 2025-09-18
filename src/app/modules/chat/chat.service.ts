@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { addMessages, Annotation, MemorySaver, StateGraph } from "@langchain/langgraph";
 import { ChatMistralAI, MistralAIEmbeddings } from "@langchain/mistralai";
-import { AIMessage, BaseMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { v4 as uuidv4 } from "uuid";
 import { Doctor } from "../doctor/doctor.model";
 import { cosineSimilarity } from "../../utils/cosineSimilarity";
@@ -122,64 +122,74 @@ const conversation = async (message: string, threadId?: string) => {
   // 1. Try to answer via doctor search
   const type = await classifyQuery(message);
   const dbAnswer = await searchDoctorInfo(message);
-  if (type === "healthcare" && !dbAnswer) {
-    // 1️⃣ Add fallback AIMessage
-    const fallbackMessage = new AIMessage({
-      content: "Sorry, no matching doctor is available in our system",
-    });
+if (type === "healthcare" && !dbAnswer) {
+  console.log("true");
 
-    // 2️⃣ Call LLM with user message only
-    const llmResponse = await app.invoke(
-      {
-        messages: [new HumanMessage(message)], // only user message
-      },
-      config
-    );
+  // 1️⃣ Fallback AI message (static info)
+  const fallbackMessage = new AIMessage({
+    content: "Sorry, no matching information is available in our healthcare system for your query.",
+  });
 
-    // 3️⃣ Combine fallback + LLM response
-    const combinedMessages: BaseMessage[] = [
-      fallbackMessage,
-      ...llmResponse.messages,
-    ];
+  // 2️⃣ Give LLM explicit instruction in context
+  const llmResponse = await app.invoke(
+    {
+      messages: [
+        new HumanMessage({
+          content: `User asked: "${message}". There is no related data available in the healthcare system. 
+          Please explain this to the user in a natural way and suggest what they can do next (if relevant).`,
+        }),
+      ],
+    },
+    config
+  );
 
-    return {
-      threadId: config.configurable.thread_id,
-      messages: combinedMessages,
-      config,
-    };
-  }
+  // 3️⃣ Combine fallback + LLM response
+  const combinedMessages: BaseMessage[] = [fallbackMessage, ...llmResponse.messages];
+
+  // 4️⃣ Clean for UI
+  const cleanedMessages = combinedMessages.map((msg: any) => ({
+    role: msg instanceof HumanMessage ? "human" : "ai",
+    content: msg.kwargs?.content || msg.content,
+  }));
+
+  return {
+    threadId: config.configurable.thread_id,
+    messages: cleanedMessages,
+    config,
+  };
+}
 
 
 
-  if (type === "healthcare" && dbAnswer) {
-    // System message for doctor info
-    const systemMsg = new SystemMessage({
-      content: dbAnswer,
-    });
 
-    // Human message for user query
-    const humanMsg = new HumanMessage({
-      content: message,
-    });
 
-    // Call the model with proper message instances
-    const llmResponse = await app.invoke(
-      {
-        messages: [systemMsg, humanMsg],
-      },
-      config
-    );
+  if (type === "healthcare") {
+    const dbAnswer = await searchDoctorInfo(message);
 
-    // Clean messages for UI
-    const cleanedMessages = llmResponse.messages.map((msg: any) => ({
-      role: msg instanceof HumanMessage ? "human" : "ai",
-      content: msg.kwargs?.content || msg.content,
-    }));
+    if (dbAnswer) {
+      // Only add the user's question to history
+      const llmResponse = await app.invoke(
+        {
+          messages: [
+            // Hidden context for the LLM
+            { role: "system", content: `Use only this doctor info:\n${dbAnswer}` } as any,
+            // Actual user message
+            new HumanMessage(message),
+          ],
+        },
+        config
+      );
 
-    return {
-      threadId: config.configurable.thread_id,
-      messages: cleanedMessages,
-    };
+      const cleanedMessages = llmResponse.messages.map((msg: any) => ({
+        role: msg.constructor.name === "HumanMessage" ? "human" : "ai",
+        content: msg.kwargs?.content || msg.content,
+      }));
+
+      return {
+        threadId: config.configurable.thread_id,
+        messages: cleanedMessages,
+      };
+    }
   }
 
 
