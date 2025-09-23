@@ -71,7 +71,7 @@ Most routes are **protected** using JWT.
 Include the token in request headers:
 ```json
 {
-  "Authorization": "with cookie || headers"
+  "Authorization": "Bearer <your_jwt_token>"
 }
 ```
 
