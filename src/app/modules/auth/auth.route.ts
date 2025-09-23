@@ -13,7 +13,7 @@ router.post("/login", validateRequest(loginShema), authController.credentialsLog
 router.post("/refresh-token", authController.getNewAccessToken)
 
 router.get("/google", async (req: Request, res: Response, next: NextFunction) => {
-    const redirect = req.query.redirect || ""
+    const redirect = req.query?.redirect || ""
     passport.authenticate("google", {
         scope: ["profile", "email"],
         state: redirect as string

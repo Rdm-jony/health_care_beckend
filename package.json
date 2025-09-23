@@ -4,11 +4,10 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-  "node": "22.x"
-}
-,
+    "node": "22.x"
+  },
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
     "lint": "npx eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -68,6 +67,7 @@
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-local": "^1.0.38",
     "eslint": "^9.31.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0"
   }

@@ -1,6 +1,8 @@
 import PDFDocument from "pdfkit";
 import path from "path";
 
+
+
 export interface IInvoice {
     customerName: string;
     customerEmail: string;
@@ -24,7 +26,7 @@ export async function generateInvoiceBuffer(invoice: IInvoice) {
         doc.on("error", (err) => reject(err));
 
         // ===== Logo =====
-        const logoPath = path.join(__dirname, "..", "..", "assets", "health_care_logo.png");
+        const logoPath = path.join(process.cwd(), "assets", "health_care_logo.png");
         doc.image(logoPath, 50, 45, { width: 100 });
 
         // Header

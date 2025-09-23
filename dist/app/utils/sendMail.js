@@ -4,6 +4,9 @@ import { envVars } from "../config/env.js";
 import path from "path";
 import ejs from "ejs";
 import AppError from "../errorHelpers/AppError.js";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const transporter = nodemailer.createTransport({
     host: envVars.MAIL_SENDER.SMTP_HOST,
     port: Number(envVars.MAIL_SENDER.SMTP_PORT),

@@ -1,5 +1,8 @@
 import PDFDocument from "pdfkit";
 import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 export async function generateInvoiceBuffer(invoice) {
     return new Promise((resolve, reject) => {
         const doc = new PDFDocument({ size: "A4", margin: 50 });
@@ -8,7 +11,7 @@ export async function generateInvoiceBuffer(invoice) {
         doc.on("end", () => resolve(Buffer.concat(buffer)));
         doc.on("error", (err) => reject(err));
         // ===== Logo =====
-        const logoPath = path.join(__dirname, "..", "..", "assets", "health_care_logo.png");
+        const logoPath = path.join(process.cwd(), "assets", "health_care_logo.png");
         doc.image(logoPath, 50, 45, { width: 100 });
         // Header
         doc.fontSize(22).text("INVOICE", 0, 50, { align: "right" }).moveDown();
