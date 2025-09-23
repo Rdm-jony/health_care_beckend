@@ -1,268 +1,1230 @@
-# 🛡️ User Authentication Backend (TypeScript + Node.js)
 
-A full-featured authentication backend built with **Node.js**, **Express**, and **TypeScript** that supports secure login, Google OAuth, role-based access, JWT authentication, OTP-based password recovery, and file upload.
+# 🏥 Health Care API
+
+The **Health Care API** provides endpoints for managing **users, doctors, appointments, authentication, chat, and more**.  
+It is designed for healthcare applications where patients can book appointments, doctors can manage their profiles, and admins can track system statistics.
 
 ---
 
 ## ✨ Features
 
-- ✅ User login via credentials & Google OAuth
-- 🔐 JWT access & refresh token system
-- 👥 Role-based access control (`user`, `admin`, `superadmin`)
-- 🔁 Token refresh logic
-- 📧 Forgot password with email OTP
-- 🧾 EJS templated emails
-- 🛡️ Secure cookie handling
-- 📁 File upload (Multer + Cloudinary)
-- ✅ Input validation using Zod
-- 🚧 Global error handler & custom AppError class
-- 🧠 Clean modular architecture (Controller-Service-Route)
+- **User Management** – Create, update, and fetch users
+- **Authentication & Authorization** – JWT-based login, password reset, Google user support
+- **OTP System** – Secure verification with one-time passwords
+- **Doctor Management** – Add, update, and view doctor profiles
+- **Specialization** – Manage doctor specializations
+- **Booking System** – Patients can book and view appointments
+- **Statistics** – Track users, doctors, and specialization metrics
+- **Chat System** – Real-time messaging support
 
 ---
 
+## 🌍 API Base URLs
+
+- **Local Development**:  
+  ```
+  http://localhost:5000/api/v1
+  ```
+
+- **Production (Deployed on Vercel)**:  
+  ```
+  https://health-care-beckend.vercel.app/api/v1
+  ```
+
 ---
 
-## 🚀 Live Demo
+## ⚙️ Setup & Installation
 
-Check out the live backend deployed on Vercel:  
-🔗 [https://user-auth-beckend.vercel.app](https://user-auth-beckend.vercel.app)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Rdm-jony/health_care_beckend
+   cd health_care_beckend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**  
+   Create a `.env` file and set:
+   ```env
+   PORT=5000
+   DATABASE_URL=mongodb://localhost:27017/healthcare
+   JWT_SECRET=your_secret_key
+   ```
+
+4. **Run the server**
+   ```bash
+   npm run dev
+   ```
+   The API will be available at:
+   ```
+   http://localhost:5000/api/v1
+   ```
 
 ---
 
+## 🔐 Authentication
 
+Most routes are **protected** using JWT.  
 
-## ⚙️ Tech Stack
-
-| Tech         | Description                    |
-|--------------|--------------------------------|
-| Node.js      | Backend runtime                |
-| Express.js   | Web framework                  |
-| TypeScript   | Static typing                  |
-| MongoDB      | NoSQL database                 |
-| Mongoose     | ODM for MongoDB                |
-| Zod          | Schema validation              |
-| JWT          | Authentication system          |
-| Passport.js  | Google OAuth integration       |
-| Multer       | File upload                    |
-| Cloudinary   | Image hosting                  |
-| Redis        | Caching (OTP/session)  |
-| Nodemailer   | Sending email OTP              |
-
-
-
-## 📁 Project Structure
-
-```
-ssrc/
-├── app.ts                  # App initialization
-├── server.ts               # Server bootstrap
-├── app/
-│   ├── config/             # Configuration files (env, multer, passport, etc.)
-│   │   ├── cloudinary.config.ts
-│   │   ├── env.ts
-│   │   ├── multer.config.ts
-│   │   ├── passport.ts
-│   │   └── redis.config.ts
-│   │
-│   ├── errorHelpers/       # Centralized error handling utilities
-│   │   ├── AppError.ts
-│   │   ├── handleCastError.ts
-│   │   ├── handleDuplicateError.ts
-│   │   ├── handleValidationError.ts
-│   │   └── handleZodError.ts
-│   │
-│   ├── interfaces/         # Global TypeScript interface declarations
-│   │   ├── error.types.ts
-│   │   └── index.d.ts
-│   │
-│   ├── middlewares/        # Express middlewares
-│   │   ├── checkAuth.ts
-│   │   ├── globalErrorHandler.ts
-│   │   └── validateRequest.ts
-│   │
-│   ├── modules/            # Domain-specific business logic
-│   │   ├── auth/           # Login, register, Google OAuth
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.route.ts
-│   │   │   ├── auth.service.ts
-│   │   │   └── auth.validation.ts
-│   │   │
-│   │   ├── otp/            # Email-based OTP verification system
-│   │   │   ├── otp.controller.ts
-│   │   │   ├── otp.route.ts
-│   │   │   ├── otp.service.ts
-│   │   │   └── otpValidation.ts
-│   │   │
-│   │   └── user/           # User profile, role, CRUD
-│   │       ├── user.controller.ts
-│   │       ├── user.interface.ts
-│   │       ├── user.model.ts
-│   │       ├── user.route.ts
-│   │       ├── user.service.ts
-│   │       └── user.validation.ts
-│   │
-│   ├── routes/             # Combines all route modules
-│   │   └── index.ts
-│   │
-│   └── utils/              # Helper utilities and services
-│       ├── catchAsync.ts
-│       ├── createUsersToken.ts
-│       ├── generateOtp.ts
-│       ├── invoice.ts
-│       ├── jwt.ts
-│       ├── seedSuperAdmin.ts  # Seed a default Super Admin user
-│       ├── sendMail.ts
-│       ├── sendResponse.ts
-│       └── setAuthCookie.ts
-│       └── ejsTemplate/    # Email HTML templates
-│           ├── forgetPassword.ejs
-│           └── otp.ejs
-
+Include the token in request headers:
+```json
+{
+  "Authorization": "with cookiw || headers"
+}
 ```
 
-## ⚙️ Environment Variables (.env)
+---
+
+## 📂 API Endpoints
+
+### 👤 User
+
+#### Create User
+```http
+POST /user/create
 ```
-DB_URL=mongodb+srv://<DB_User>:<DB_Pass>@cluster0.tbsccmb.mongodb.net/<DB_Name>?retryWrites=true&w=majority&appName=Cluster0
-PORT=5000
-NODE_ENV="development"
-
-BCRYPT_SALT=<bcrypt_salt_number>
-
-#express_session_secret
-EXPRESS_SESSION_SECRET=<express_session_secret>
-
-# accessToken
-JWT_ACCESS_TOKEN_SECRET=<secret_token>
-JWT_ACCESS_TOKEN_EXPIRESIN=<token_expire_time>
-
-# REFRESHToken
-JWT_REFRESH_TOKEN_SECRET=<secret_token>
-JWT_REFRESH_TOKEN_EXPIRESIN=<token_expire_time>
-
-#Google
-GOOGLE_CLIENT_SECRET=<google_client_secret>
-GOOGLE_CLIENT_ID=<client_id>
-GOOGLE_CALLBACK_URL=<callback_url>
-# Front end url
-FRONT_END_URL=<front_end_url>
-
-#SMTP 
-SMTP_HOST=smtp.gmail.com
-SMTP_USER=<smtp_user_mail>
-SMTP_PORT=<smtp_port>
-SMTP_PASS=<app_pass>
-SMTP_FROM=<smtp_user_mail>
-
-#cloudinary
-CLOUDINARY_API_KEY=<cloudinary_api_key>
-CLOUDINARY_CLOUD_NAME=<cloudinary_cloud_name>
-CLOUDINARY_SECRET_KEY=<cloudinary_secret_key>
-
-#Redis
-REDIS_USERNAME=default
-REDIS_PASSWORD=<redis_pass>
-REDIS_HOST=<redis_host>
-REDIS_PORT=<redis_port>
-
+**Request**
+```json
+{
+  "name": "Jony Das",
+  "email": "jonydascse21@gmail.com"
+}
+```
+**Response**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": "687660d54a2ee5386f5d2c1f",
+    "name": "Jony Das",
+    "email": "jonydascse21@gmail.com"
+  }
+}
 ```
 
-## 🔐API Documentation
-
-### Base URL
+#### Update User
+```http
+POST /user/update
 ```
-https://user-auth-beckend.vercel.app/api/v1  (live)
-https://health-care-beckend.vercel.app/api/v1  (local)
-
-
-```
-### Auth Routes (/auth)
-
-| Method | Endpoint                | Description                                   | Auth Required | Request Body / Query Parameters                  |
-| ------ | ----------------------- | --------------------------------------------- | ------------- | ------------------------------------------------ |
-| POST   | `/auth/login`           | User login with email and password            | No❌            | JSON body: `{ email: string, password: string }` |
-| POST   | `/auth/refresh-token`   | Get new access token using refresh token      | No❌           | (Uses cookie)                                    |
-| GET    | `/auth/google`          | Initiate Google OAuth login                   | No❌           | Query param: `redirect` (optional)               |
-| GET    | `/auth/google/callback` | Google OAuth callback                         | No❌           | -                                                |
-| POST   | `/auth/change-password` | Change password                               | Yes✅           | JSON body with validation                        |
-| POST   | `/auth/set-password`    | Set new password (for users without password) | Yes           | JSON body with validation                        |
-| POST   | `/auth/logout`          | Logout user                                   | No❌            | -                                                |
-| POST   | `/auth/forget-password` | Request password reset OTP email              | No❌            | JSON body with email                             |
-| POST   | `/auth/reset-password`  | Reset password with OTP                       | Yes✅           | JSON body with OTP and new password              |
-          
-
-### User Routes (/user)
-
-| Method | Endpoint          | Description                           | Auth Required                             | Request Body / Notes                                                |
-| ------ | ----------------- | ------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| POST   | `/user/create`    | Create a new user                     | No❌                                        | Multipart form data (`file` for upload), plus validated user data   |
-| GET    | `/user/all-users` | Get list of all users                 | Yes✅, Roles: ADMIN, SUPER\_ADMIN           | -                                                                   |
-| GET    | `/user/get-me`    | Get profile of current logged-in user | Yes✅, Roles: any (user, admin, superadmin) | -                                                                   |
-| GET    | `/user/:id`       | Get a single user by ID               | Yes✅, Roles: ADMIN, SUPER\_ADMIN           | URL param: user ID                                                  |
-| PATCH  | `/user/:id`       | Update user data                      | Yes✅, Roles: any                           | Multipart form data (`file` for upload), plus validated update data |
-
-### OTP Routes (/otp)
-| Method | Endpoint      | Description                  | Auth Required |
-| ------ | ------------- | ---------------------------- | ------------- |
-| POST   | `/otp/send`   | Send OTP to user email/phone | No❌           |
-| POST   | `/otp/verify` | Verify OTP                   | No❌            |
-
-
-
-### 🚀Notes:
-- Auth Required means the route is protected by **checkAuth** middleware which checks JWT token and user roles.
-
-- **Validation** is done using Zod schemas (e.g., loginShema, changePasswordShema, etc.) before controller logic.
-
-- File uploads handled using **Multer middleware** (multerUpload.single("file")) on relevant routes.
-
-- **Google OAuth** login uses **Passport.js** with routes /auth/google and /auth/google/callback.
-
-- **Refresh** token is handled via cookie on /auth/refresh-token.
-
-- **Role-based** access uses enum Role with values like ADMIN, SUPER_ADMIN, and USER.
-
-## 🔌 Postma collection
-
-📬 You can explore the full API using the Postman collection below:
-
-👉 [Postman Collection Link](https://jonydas.postman.co/workspace/jony-das's-Workspace~ba583e4b-416b-40d4-8462-1752c44cad0a/request/43952441-ac79ad7e-0345-4ab7-9273-3fe8169ddba5?action=share&creator=43952441&ctx=documentation)
-
-📦 Base URL: `https://health-care-beckend.vercel.app/api/v1`
-
-🛠 Features Covered:
-- ✅ User Registration & Management
-- ✅ Email OTP System
-- ✅ Authentication (Login, Logout, Google Auth)
-- ✅ Password Change / Reset
-
-## 🚀 Local Setup Instructions
-### 1️⃣ Clone the Repository
-```
-git clone https://github.com/yourusername/user_auth_backend.git
-cd user_auth_backend
+```json
+{
+  "name": "Updated Name",
+  "email": "jony4@gmail.com"
+}
 ```
 
-### 2️⃣ Install Dependencies
+#### Other User Routes
+- `GET /user` → Get all users  
+- `GET /user/:id` → Get single user  
+- `GET /user/pending` → Get pending requests  
+- `GET /user/request-send` → Send a user request  
+
+---
+
+### 🔐 Auth
+
+#### Reset Password
+```http
+POST /auth/reset-password
 ```
-npm install
-# or
-yarn install
+**Request**
+```json
+{
+  "id": "68833e18716062f268c26480",
+  "token": "JWT_TOKEN_HERE"
+}
 ```
 
-### 3️⃣ Set up Environment Variables
-Create a ```.env``` file in the root directory and paste the environment variables from the example above.
+**Other Auth Endpoints**
+- `POST /auth/login` → User login  
+- `POST /auth/token` → Create new access token  
+- `POST /auth/change-password` → Change password  
+- `POST /auth/set-password` → Set password for Google users  
+- `POST /auth/forget-password` → Request password reset  
 
-### 4️⃣ Run the Development Server
+---
+
+### 📲 OTP
+
+- `POST /otp/send` → Send OTP  
+- `POST /otp/verify` → Verify OTP  
+
+---
+
+### 🩺 Doctor
+
+#### Add Doctor
+```http
+POST /doctor
 ```
-npm run dev
+
+#### Update Doctor
+```http
+PATCH /doctor/:id
+```
+**Request**
+```json
+{
+  "name": "Dr. Jony Das"
+}
 ```
 
+**Other Doctor Endpoints**
+- `GET /doctor` → Get all doctors  
+- `GET /doctor/:id` → Get single doctor  
+- `GET /doctor/reject` → Reject doctor request  
 
+---
 
+### 🧑‍⚕️ Specialization
 
+- `POST /specialization` → Add specialization  
+- `PATCH /specialization/:id` → Update specialization  
+- `GET /specialization` → Get all specializations  
 
-```bash
-git clone https://github.com/yourusername/user_auth_backend.git
-cd user_auth_backend
+---
 
+### 📅 Booking
 
+#### Create Booking
+```http
+POST /booking/create
+```
+**Request**
+```json
+{
+  "doctor": "68b34c99155e908be7ea6524"
+}
+```
+
+#### Get User Bookings
+```http
+GET /booking/user
+```
+
+---
+
+### 📊 Stats
+
+- `GET /stats/user` → User statistics  
+- `GET /stats/specialization` → Specialization statistics  
+- `GET /stats/doctor` → Doctor statistics  
+
+---
+
+### 💬 Chat
+
+#### Create Chat Message
+```http
+POST /chat/create
+```
+**Request**
+```json
+{
+  "message": "Hello doctor, I need help",
+  "threadId": 1
+}
+```
+
+---
+
+## 🧪 API Testing with Postman
+
+You can import the provided collection file into Postman:
+
+- File: `health care.postman_collection.json`
+- Open Postman → Import → Upload the collection
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+# 🏥 Health Care API
+
+The **Health Care API** provides endpoints for managing **users, doctors, appointments, authentication, chat, and more**.  
+It is designed for healthcare applications where patients can book appointments, doctors can manage their profiles, and admins can track system statistics.
+
+---
+
+## ✨ Features
+
+- **User Management** – Create, update, and fetch users
+- **Authentication & Authorization** – JWT-based login, password reset, Google user support
+- **OTP System** – Secure verification with one-time passwords
+- **Doctor Management** – Add, update, and view doctor profiles
+- **Specialization** – Manage doctor specializations
+- **Booking System** – Patients can book and view appointments
+- **Statistics** – Track users, doctors, and specialization metrics
+- **Chat System** – Real-time messaging support
+
+---
+
+## 🌍 API Base URLs
+
+- **Local Development**:  
+  ```
+  http://localhost:5000/api/v1
+  ```
+
+- **Production (Deployed on Vercel)**:  
+  ```
+  https://health-care-beckend.vercel.app/api/v1
+  ```
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Rdm-jony/health_care_beckend
+   cd health_care_beckend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**  
+   Create a `.env` file and set:
+   ```env
+   PORT=5000
+   DATABASE_URL=mongodb://localhost:27017/healthcare
+   JWT_SECRET=your_secret_key
+   ```
+
+4. **Run the server**
+   ```bash
+   npm run dev
+   ```
+   The API will be available at:
+   ```
+   http://localhost:5000/api/v1
+   ```
+
+---
+
+## 🔐 Authentication
+
+Most routes are **protected** using JWT.  
+
+Include the token in request headers:
+```json
+{
+  "Authorization": "with cookiw || headers"
+}
+```
+
+---
+
+## 📂 API Endpoints
+
+### 👤 User
+
+#### Create User
+```http
+POST /user/create
+```
+**Request**
+```json
+{
+  "name": "Jony Das",
+  "email": "jonydascse21@gmail.com"
+}
+```
+**Response**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": "687660d54a2ee5386f5d2c1f",
+    "name": "Jony Das",
+    "email": "jonydascse21@gmail.com"
+  }
+}
+```
+
+#### Update User
+```http
+POST /user/update
+```
+```json
+{
+  "name": "Updated Name",
+  "email": "jony4@gmail.com"
+}
+```
+
+#### Other User Routes
+- `GET /user` → Get all users  
+- `GET /user/:id` → Get single user  
+- `GET /user/pending` → Get pending requests  
+- `GET /user/request-send` → Send a user request  
+
+---
+
+### 🔐 Auth
+
+#### Reset Password
+```http
+POST /auth/reset-password
+```
+**Request**
+```json
+{
+  "id": "68833e18716062f268c26480",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+**Other Auth Endpoints**
+- `POST /auth/login` → User login  
+- `POST /auth/token` → Create new access token  
+- `POST /auth/change-password` → Change password  
+- `POST /auth/set-password` → Set password for Google users  
+- `POST /auth/forget-password` → Request password reset  
+
+---
+
+### 📲 OTP
+
+- `POST /otp/send` → Send OTP  
+- `POST /otp/verify` → Verify OTP  
+
+---
+
+### 🩺 Doctor
+
+#### Add Doctor
+```http
+POST /doctor
+```
+
+#### Update Doctor
+```http
+PATCH /doctor/:id
+```
+**Request**
+```json
+{
+  "name": "Dr. Jony Das"
+}
+```
+
+**Other Doctor Endpoints**
+- `GET /doctor` → Get all doctors  
+- `GET /doctor/:id` → Get single doctor  
+- `GET /doctor/reject` → Reject doctor request  
+
+---
+
+### 🧑‍⚕️ Specialization
+
+- `POST /specialization` → Add specialization  
+- `PATCH /specialization/:id` → Update specialization  
+- `GET /specialization` → Get all specializations  
+
+---
+
+### 📅 Booking
+
+#### Create Booking
+```http
+POST /booking/create
+```
+**Request**
+```json
+{
+  "doctor": "68b34c99155e908be7ea6524"
+}
+```
+
+#### Get User Bookings
+```http
+GET /booking/user
+```
+
+---
+
+### 📊 Stats
+
+- `GET /stats/user` → User statistics  
+- `GET /stats/specialization` → Specialization statistics  
+- `GET /stats/doctor` → Doctor statistics  
+
+---
+
+### 💬 Chat
+
+#### Create Chat Message
+```http
+POST /chat/create
+```
+**Request**
+```json
+{
+  "message": "Hello doctor, I need help",
+  "threadId": 1
+}
+```
+
+---
+
+## 🧪 API Testing with Postman
+
+You can import the provided collection file into Postman:
+
+- File: `health care.postman_collection.json`
+- Open Postman → Import → Upload the collection
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+# 🏥 Health Care API
+
+The **Health Care API** provides endpoints for managing **users, doctors, appointments, authentication, chat, and more**.  
+It is designed for healthcare applications where patients can book appointments, doctors can manage their profiles, and admins can track system statistics.
+
+---
+
+## ✨ Features
+
+- **User Management** – Create, update, and fetch users
+- **Authentication & Authorization** – JWT-based login, password reset, Google user support
+- **OTP System** – Secure verification with one-time passwords
+- **Doctor Management** – Add, update, and view doctor profiles
+- **Specialization** – Manage doctor specializations
+- **Booking System** – Patients can book and view appointments
+- **Statistics** – Track users, doctors, and specialization metrics
+- **Chat System** – Real-time messaging support
+
+---
+
+## 🌍 API Base URLs
+
+- **Local Development**:  
+  ```
+  http://localhost:5000/api/v1
+  ```
+
+- **Production (Deployed on Vercel)**:  
+  ```
+  https://health-care-beckend.vercel.app/api/v1
+  ```
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Rdm-jony/health_care_beckend
+   cd health_care_beckend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**  
+   Create a `.env` file and set:
+   ```env
+   PORT=5000
+   DATABASE_URL=mongodb://localhost:27017/healthcare
+   JWT_SECRET=your_secret_key
+   ```
+
+4. **Run the server**
+   ```bash
+   npm run dev
+   ```
+   The API will be available at:
+   ```
+   http://localhost:5000/api/v1
+   ```
+
+---
+
+## 🔐 Authentication
+
+Most routes are **protected** using JWT.  
+
+Include the token in request headers:
+```json
+{
+  "Authorization": "with cookiw || headers"
+}
+```
+
+---
+
+## 📂 API Endpoints
+
+### 👤 User
+
+#### Create User
+```http
+POST /user/create
+```
+**Request**
+```json
+{
+  "name": "Jony Das",
+  "email": "jonydascse21@gmail.com"
+}
+```
+**Response**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": "687660d54a2ee5386f5d2c1f",
+    "name": "Jony Das",
+    "email": "jonydascse21@gmail.com"
+  }
+}
+```
+
+#### Update User
+```http
+POST /user/update
+```
+```json
+{
+  "name": "Updated Name",
+  "email": "jony4@gmail.com"
+}
+```
+
+#### Other User Routes
+- `GET /user` → Get all users  
+- `GET /user/:id` → Get single user  
+- `GET /user/pending` → Get pending requests  
+- `GET /user/request-send` → Send a user request  
+
+---
+
+### 🔐 Auth
+
+#### Reset Password
+```http
+POST /auth/reset-password
+```
+**Request**
+```json
+{
+  "id": "68833e18716062f268c26480",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+**Other Auth Endpoints**
+- `POST /auth/login` → User login  
+- `POST /auth/token` → Create new access token  
+- `POST /auth/change-password` → Change password  
+- `POST /auth/set-password` → Set password for Google users  
+- `POST /auth/forget-password` → Request password reset  
+
+---
+
+### 📲 OTP
+
+- `POST /otp/send` → Send OTP  
+- `POST /otp/verify` → Verify OTP  
+
+---
+
+### 🩺 Doctor
+
+#### Add Doctor
+```http
+POST /doctor
+```
+
+#### Update Doctor
+```http
+PATCH /doctor/:id
+```
+**Request**
+```json
+{
+  "name": "Dr. Jony Das"
+}
+```
+
+**Other Doctor Endpoints**
+- `GET /doctor` → Get all doctors  
+- `GET /doctor/:id` → Get single doctor  
+- `GET /doctor/reject` → Reject doctor request  
+
+---
+
+### 🧑‍⚕️ Specialization
+
+- `POST /specialization` → Add specialization  
+- `PATCH /specialization/:id` → Update specialization  
+- `GET /specialization` → Get all specializations  
+
+---
+
+### 📅 Booking
+
+#### Create Booking
+```http
+POST /booking/create
+```
+**Request**
+```json
+{
+  "doctor": "68b34c99155e908be7ea6524"
+}
+```
+
+#### Get User Bookings
+```http
+GET /booking/user
+```
+
+---
+
+### 📊 Stats
+
+- `GET /stats/user` → User statistics  
+- `GET /stats/specialization` → Specialization statistics  
+- `GET /stats/doctor` → Doctor statistics  
+
+---
+
+### 💬 Chat
+
+#### Create Chat Message
+```http
+POST /chat/create
+```
+**Request**
+```json
+{
+  "message": "Hello doctor, I need help",
+  "threadId": 1
+}
+```
+
+---
+
+## 🧪 API Testing with Postman
+
+You can import the provided collection file into Postman:
+
+- File: `health care.postman_collection.json`
+- Open Postman → Import → Upload the collection
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+# 🏥 Health Care API
+
+The **Health Care API** provides endpoints for managing **users, doctors, appointments, authentication, chat, and more**.  
+It is designed for healthcare applications where patients can book appointments, doctors can manage their profiles, and admins can track system statistics.
+
+---
+
+## ✨ Features
+
+- **User Management** – Create, update, and fetch users
+- **Authentication & Authorization** – JWT-based login, password reset, Google user support
+- **OTP System** – Secure verification with one-time passwords
+- **Doctor Management** – Add, update, and view doctor profiles
+- **Specialization** – Manage doctor specializations
+- **Booking System** – Patients can book and view appointments
+- **Statistics** – Track users, doctors, and specialization metrics
+- **Chat System** – Real-time messaging support
+
+---
+
+## 🌍 API Base URLs
+
+- **Local Development**:  
+  ```
+  http://localhost:5000/api/v1
+  ```
+
+- **Production (Deployed on Vercel)**:  
+  ```
+  https://health-care-beckend.vercel.app/api/v1
+  ```
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Rdm-jony/health_care_beckend
+   cd health_care_beckend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**  
+   Create a `.env` file and set:
+   ```env
+   PORT=5000
+   DATABASE_URL=mongodb://localhost:27017/healthcare
+   JWT_SECRET=your_secret_key
+   ```
+
+4. **Run the server**
+   ```bash
+   npm run dev
+   ```
+   The API will be available at:
+   ```
+   http://localhost:5000/api/v1
+   ```
+
+---
+
+## 🔐 Authentication
+
+Most routes are **protected** using JWT.  
+
+Include the token in request headers:
+```json
+{
+  "Authorization": "with cookiw || headers"
+}
+```
+
+---
+
+## 📂 API Endpoints
+
+### 👤 User
+
+#### Create User
+```http
+POST /user/create
+```
+**Request**
+```json
+{
+  "name": "Jony Das",
+  "email": "jonydascse21@gmail.com"
+}
+```
+**Response**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": "687660d54a2ee5386f5d2c1f",
+    "name": "Jony Das",
+    "email": "jonydascse21@gmail.com"
+  }
+}
+```
+
+#### Update User
+```http
+POST /user/update
+```
+```json
+{
+  "name": "Updated Name",
+  "email": "jony4@gmail.com"
+}
+```
+
+#### Other User Routes
+- `GET /user` → Get all users  
+- `GET /user/:id` → Get single user  
+- `GET /user/pending` → Get pending requests  
+- `GET /user/request-send` → Send a user request  
+
+---
+
+### 🔐 Auth
+
+#### Reset Password
+```http
+POST /auth/reset-password
+```
+**Request**
+```json
+{
+  "id": "68833e18716062f268c26480",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+**Other Auth Endpoints**
+- `POST /auth/login` → User login  
+- `POST /auth/token` → Create new access token  
+- `POST /auth/change-password` → Change password  
+- `POST /auth/set-password` → Set password for Google users  
+- `POST /auth/forget-password` → Request password reset  
+
+---
+
+### 📲 OTP
+
+- `POST /otp/send` → Send OTP  
+- `POST /otp/verify` → Verify OTP  
+
+---
+
+### 🩺 Doctor
+
+#### Add Doctor
+```http
+POST /doctor
+```
+
+#### Update Doctor
+```http
+PATCH /doctor/:id
+```
+**Request**
+```json
+{
+  "name": "Dr. Jony Das"
+}
+```
+
+**Other Doctor Endpoints**
+- `GET /doctor` → Get all doctors  
+- `GET /doctor/:id` → Get single doctor  
+- `GET /doctor/reject` → Reject doctor request  
+
+---
+
+### 🧑‍⚕️ Specialization
+
+- `POST /specialization` → Add specialization  
+- `PATCH /specialization/:id` → Update specialization  
+- `GET /specialization` → Get all specializations  
+
+---
+
+### 📅 Booking
+
+#### Create Booking
+```http
+POST /booking/create
+```
+**Request**
+```json
+{
+  "doctor": "68b34c99155e908be7ea6524"
+}
+```
+
+#### Get User Bookings
+```http
+GET /booking/user
+```
+
+---
+
+### 📊 Stats
+
+- `GET /stats/user` → User statistics  
+- `GET /stats/specialization` → Specialization statistics  
+- `GET /stats/doctor` → Doctor statistics  
+
+---
+
+### 💬 Chat
+
+#### Create Chat Message
+```http
+POST /chat/create
+```
+**Request**
+```json
+{
+  "message": "Hello doctor, I need help",
+  "threadId": 1
+}
+```
+
+---
+
+## 🧪 API Testing with Postman
+
+You can import the provided collection file into Postman:
+
+- File: `health care.postman_collection.json`
+- Open Postman → Import → Upload the collection
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+# 🏥 Health Care API
+
+The **Health Care API** provides endpoints for managing **users, doctors, appointments, authentication, chat, and more**.  
+It is designed for healthcare applications where patients can book appointments, doctors can manage their profiles, and admins can track system statistics.
+
+---
+
+## ✨ Features
+
+- **User Management** – Create, update, and fetch users
+- **Authentication & Authorization** – JWT-based login, password reset, Google user support
+- **OTP System** – Secure verification with one-time passwords
+- **Doctor Management** – Add, update, and view doctor profiles
+- **Specialization** – Manage doctor specializations
+- **Booking System** – Patients can book and view appointments
+- **Statistics** – Track users, doctors, and specialization metrics
+- **Chat System** – Real-time messaging support
+
+---
+
+## 🌍 API Base URLs
+
+- **Local Development**:  
+  ```
+  http://localhost:5000/api/v1
+  ```
+
+- **Production (Deployed on Vercel)**:  
+  ```
+  https://health-care-beckend.vercel.app/api/v1
+  ```
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Rdm-jony/health_care_beckend
+   cd health_care_beckend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**  
+   Create a `.env` file and set:
+   ```env
+   PORT=5000
+   DATABASE_URL=mongodb://localhost:27017/healthcare
+   JWT_SECRET=your_secret_key
+   ```
+
+4. **Run the server**
+   ```bash
+   npm run dev
+   ```
+   The API will be available at:
+   ```
+   http://localhost:5000/api/v1
+   ```
+
+---
+
+## 🔐 Authentication
+
+Most routes are **protected** using JWT.  
+
+Include the token in request headers:
+```json
+{
+  "Authorization": "with cookiw || headers"
+}
+```
+
+---
+
+## 📂 API Endpoints
+
+### 👤 User
+
+#### Create User
+```http
+POST /user/create
+```
+**Request**
+```json
+{
+  "name": "Jony Das",
+  "email": "jonydascse21@gmail.com"
+}
+```
+**Response**
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": "687660d54a2ee5386f5d2c1f",
+    "name": "Jony Das",
+    "email": "jonydascse21@gmail.com"
+  }
+}
+```
+
+#### Update User
+```http
+POST /user/update
+```
+```json
+{
+  "name": "Updated Name",
+  "email": "jony4@gmail.com"
+}
+```
+
+#### Other User Routes
+- `GET /user` → Get all users  
+- `GET /user/:id` → Get single user  
+- `GET /user/pending` → Get pending requests  
+- `GET /user/request-send` → Send a user request  
+
+---
+
+### 🔐 Auth
+
+#### Reset Password
+```http
+POST /auth/reset-password
+```
+**Request**
+```json
+{
+  "id": "68833e18716062f268c26480",
+  "token": "JWT_TOKEN_HERE"
+}
+```
+
+**Other Auth Endpoints**
+- `POST /auth/login` → User login  
+- `POST /auth/token` → Create new access token  
+- `POST /auth/change-password` → Change password  
+- `POST /auth/set-password` → Set password for Google users  
+- `POST /auth/forget-password` → Request password reset  
+
+---
+
+### 📲 OTP
+
+- `POST /otp/send` → Send OTP  
+- `POST /otp/verify` → Verify OTP  
+
+---
+
+### 🩺 Doctor
+
+#### Add Doctor
+```http
+POST /doctor
+```
+
+#### Update Doctor
+```http
+PATCH /doctor/:id
+```
+**Request**
+```json
+{
+  "name": "Dr. Jony Das"
+}
+```
+
+**Other Doctor Endpoints**
+- `GET /doctor` → Get all doctors  
+- `GET /doctor/:id` → Get single doctor  
+- `GET /doctor/reject` → Reject doctor request  
+
+---
+
+### 🧑‍⚕️ Specialization
+
+- `POST /specialization` → Add specialization  
+- `PATCH /specialization/:id` → Update specialization  
+- `GET /specialization` → Get all specializations  
+
+---
+
+### 📅 Booking
+
+#### Create Booking
+```http
+POST /booking/create
+```
+**Request**
+```json
+{
+  "doctor": "68b34c99155e908be7ea6524"
+}
+```
+
+#### Get User Bookings
+```http
+GET /booking/user
+```
+
+---
+
+### 📊 Stats
+
+- `GET /stats/user` → User statistics  
+- `GET /stats/specialization` → Specialization statistics  
+- `GET /stats/doctor` → Doctor statistics  
+
+---
+
+### 💬 Chat
+
+#### Create Chat Message
+```http
+POST /chat/create
+```
+**Request**
+```json
+{
+  "message": "Hello doctor, I need help",
+  "threadId": 1
+}
+```
+
+---
+
+## 🧪 API Testing with Postman
+
+You can import the provided collection file into Postman:
+
+- File: `health care.postman_collection.json`
+- Open Postman → Import → Upload the collection
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
